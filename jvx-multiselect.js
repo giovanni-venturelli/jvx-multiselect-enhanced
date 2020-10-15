@@ -1,0 +1,570 @@
+import {LitElement, html, css} from 'lit-element';
+import {classMap} from 'lit-html/directives/class-map';
+import {repeat} from 'lit-html/directives/repeat';
+import '@material/mwc-button';
+import '@material/mwc-menu';
+import '@material/mwc-icon';
+import '@material/mwc-icon-button';
+import '@material/mwc-list/mwc-list-item.js';
+import '@material/mwc-list/mwc-list.js';
+import '@material/mwc-textfield';
+import 'paper-chip';
+import 'jvx-material-input'
+
+/**
+ * `jvx-multiselect`
+ * a multiselect
+ *
+ * @customElement
+ * @polymer
+ * @demo demo/index.html
+ */
+class JvxMultiselect extends LitElement {
+  render() {
+    return html`
+      <div style="position:relative; display: inline;" class=${classMap({
+      'jvx-multiselect': true,
+      'jvx-multiselect-error': this.hasErrors,
+      'jvx-multiselect-isFocused': this.isOpen || this.isFocused,
+      'jvx-multiselect-isOpen': this.isOpen,
+      'jvx-multiselect-has-state': this.isOpen || this.hasErrors === true || this.disabled,
+      'jvx-multiselect-disabled': this.disabled
+    })}>
+      <!-- region input container -->
+        <div id="multiInputField" class=${classMap({
+      'input-container': true,
+      'menu-is-open': this.isOpen,
+      'selection-active': this.value !== null && this.value.length > 0
+    })} >
+        <label>${this.label}</label>
+        <div class="input-container__selected-container" @click="${this.toggleMenu}">
+      <div class="input-container__selected"> 
+     ${this.multi ? html`
+     <span>
+       ${repeat(this.value, item => item[this.itemValue], (item, index) => html`
+          <paper-chip noHover="true" label="${item[this.itemText]}" closable 
+          @chip-removed="${() => {
+        this.select(item)
+      }}">
+          </paper-chip>`)}
+     </span>`
+      : html`
+        ${repeat(this.value, item => item[this.itemValue], (item, index) => html`
+            <div> ${item[this.itemText]}</div>
+        `)}
+      `}
+      </div>  
+        <!-- region remove button -->  
+        ${this.value.length > 0 && this.multi === false && this.clearable === true ? html`
+        <div class="input-container__remove-button-container">
+          <mwc-icon @click="${(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.select(this.value[0])
+    }}" class="input-container__remove-button">
+        close
+        </mwc-icon></div>` : html``
+    }
+        <!--- endregion -->
+        <!-- region arrow icon -->
+        <div class="input-container__arrow">
+                  ${!this.isLoading ? html`
+                  <mwc-icon>arrow_drop_down
+                  </mwc-icon>
+                  ` : html`
+                  <div class="lds-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  `}               
+                </div>
+        <!-- endregion -->
+                </div>
+        </div>
+        <!-- endregion -->
+        <!-- region menu -->
+        <mwc-menu fullwidth id="optionsMenu"  @closed="${this.onMenuToggled}" @opened="${this.onMenuToggled}">
+                    
+          <!-- region search input -->
+          <div class="optionsMenu__search-input-container">
+            <jvx-material-input label="searchLabel"
+                          @val-change="${this._onSearch}" 
+                          background-color="transparent"
+                          class="ma-0 pa-0 jvx-multiselect-search-field"
+                          flat
+                          @click:append="$emit('showAdvancedSearch')"
+                          @click:clear="${this._onSearch}"
+                          v-if="searchInput"
+                          value="${this.searchValue}">
+                          ${this.advancedSearch ? html`
+                          <div slot="append">
+                             <mwc-icon-button id="advanced-search-button" icon="more_vert" @click="${this.showAdvancedSearch}">
+                            </mwc-icon-button></div>` : html``}
+            </jvx-material-input>
+        </div>
+        <!-- endregion -->
+        <!--       region list-->
+            <mwc-list multi="${this.multi}">
+        ${repeat(this.selectableItems, item => item[this.itemValue], (item, index) => html`
+             <mwc-list-item class="list-option"  .selected="${item.selected}" .activated="${item.selected}" value="${item[this.itemValue]}" @click="${(e) => {
+      this.select(item)
+    }}">
+             
+      <slot name="option-item" @slotchange="${(e) => {
+      this._onOptionSlotChange(e, item)
+    }}" > ${item[this.itemText]}</slot>
+                      
+                   </mwc-list-item>`)}
+            </mwc-list>
+        <!--      endregion -->
+        </mwc-menu>
+        <!-- endregion -->
+        </div>
+      </div>
+    `;
+  }
+
+  static get properties() {
+    const self = this;
+    return {
+      outlined: {type: Boolean, reflect: true},
+      selectableItems: {type: Array, reflect: true, attribute: false},
+      selected: {
+        type: Array,
+        reflect: true,
+        attribute: false,
+      },
+      options: {
+        type: Array, reflect: true
+      },
+      multi: {type: Boolean, reflect: true, attribute: 'multi'},
+      closeOnClick: {type: Boolean, reflect: true},
+      label: {type: String, reflect: true},
+      value: {type: Array, reflect: true},
+      isLoading: {type: Boolean, reflect: true},
+      isOpen: {type: Boolean, reflect: true, attribute: false},
+      isFocused: {type: Boolean, reflect: true, attribute: false},
+      hasErrors: {type: Boolean, reflect: true, attribute: false},
+      isSearching: {type: Boolean, reflect: true, attribute: false},
+      searchValue: {type: String, reflect: true, attribute: false},
+      pagination: {type: Object, reflect: true, attribute: false},
+      disabled: {type: Boolean, reflect: true},
+      clearable: {type: Boolean, reflect: true},
+      searchInput: {type: Boolean, reflect: true},
+      advancedSearch: {type: Boolean, reflect: true},
+      /**
+       * The property of the response object which has to be translated to the value property of the options.
+       */
+      itemValue: {
+        type: String,
+        reflect: true
+      },
+
+      /**
+       * The property of the response object which has to be translated to the text property of the options.
+       */
+      itemText: {
+        type: String,
+        reflect: true
+      },
+    };
+  }
+
+  constructor() {
+    super();
+    this.selectableItems = [];
+    this.selected = [];
+    this.multi = false;
+    this.value = [];
+    this.options = [{text: 'Value 1', value: 1}, {text: 'Value 2', value: 2}, {text: 'Value 3', value: 3}];
+    this.isLoading = false;
+    this.isOpen = false;
+    this.isFocused = false;
+    this.hasErrors = false;
+    this.isSearching = false;
+    this.disabled = false;
+    this.label = '';
+    this.closeOnClick = false;
+    this.clearable = true;
+    this.searchValue = '';
+    this.searchInput = false;
+    this.advancedSearch = false;
+    this.pagination = {
+      page: 1,
+      pageSize: 15
+    };
+    this.itemText = 'text';
+    this.itemValue = 'value';
+  }
+
+  connectedCallback() {
+    super.connectedCallback()
+
+    // sets the selectable items
+    for (const item of this.options) {
+      const index = this.selectableItems.find((s) => s[this.itemValue] === item[this.itemValue]);
+      if (index > -1) {
+        this.selected = this.selectableItems[index].selected;
+        this.selectableItems[index] = this.cloneDeep(item);
+        this.selectableItems[index].selected = selected;
+        this.selectableItems = [...this.selectableItems];
+      } else {
+        let temp = this.cloneDeep(item);
+        temp.selected = false;
+        this.selectableItems = [...this.selectableItems, temp];
+      }
+    }
+
+    // sets the default selected items
+    for (const val of this.value) {
+      this.selected = [...this.selected, this.cloneDeep(val)];
+      this.updateSelectableItems();
+    }
+
+    // slots[1].addEventListener('slotchange', function(e) {
+    //   let nodes = slots[1].assignedNodes();
+    //   console.log('Element in Slot "' + slots[1].name + '" changed to "' + nodes[0].outerHTML + '".');
+    // });
+  }
+
+  get optionsMenu() {
+    return this.shadowRoot.querySelector('#optionsMenu');
+  }
+
+  get jvxList() {
+    return this.shadowRoot.querySelector('#jvxList');
+  }
+
+  toggleMenu() {
+    this.optionsMenu.open = !this.optionsMenu.open;
+  }
+
+  onMenuToggled() {
+    this.isOpen = this.optionsMenu.open;
+    this.isFocused = this.optionsMenu.open;
+  }
+
+  select(item) {
+    const index = this.selected.findIndex(i => i[this.itemValue] === item[this.itemValue]);
+    if (index > -1) {
+      const temp = [...this.selected]
+      temp.splice(index, 1);
+      this.selected = [...temp];
+    } else {
+      if (!this.multi) {
+        this.selected.length = 0;
+      }
+      this.selected = [...this.selected, this.cloneDeep(item)];
+    }
+    if (this.closeOnClick && !this.multi) {
+      this.optionsMenu.open = false;
+    }
+    this.updateSelectableItems();
+
+    const event = new CustomEvent('input', {
+      detail: this.selected
+    });
+    //TODO: rimuovere per pubblicazione
+    this.value = this.selected;
+    // FINE TODO
+
+    this.dispatchEvent(event);
+  }
+
+  showAdvancedSearch() {
+    const event = new CustomEvent('showAdvancedSearch');
+    this.dispatchEvent(event);
+  }
+
+  updateSelectableItems() {
+    for (let i = 0; i < this.selectableItems.length; i++) {
+      const item = this.selectableItems[i];
+      item.selected = this.selected.findIndex((v) => v[this.itemValue] === item[this.itemValue]) > -1;
+      this.selectableItems[i] = {...item};
+    }
+    this.selectableItems = [...this.selectableItems];
+  }
+
+
+  get listOptions() {
+    return this.shadowRoot.querySelector('.list-option');
+  }
+
+  get multiValue() {
+    return this.selected.filter((v) => this.multi);
+  }
+
+  get singleValue() {
+    return this.selected.filter((v) => !this.multi);
+  }
+
+  cloneDeep(el) {
+    let ret = {};
+    for (let key of Object.keys(el)) {
+      if (!!el[key] && typeof el[key] === 'object') {
+        ret[key] = this.cloneDeep(el[key]);
+      } else {
+        ret[key] = el[key];
+      }
+    }
+    return ret;
+  }
+
+  onClose(item) {
+  }
+
+  _onOptionSlotChange(e, item) {
+    const optionTemplate = this.shadowRoot.querySelector('#option-template');
+
+    const nodes = e.target.assignedNodes();
+
+    this._replaceOptionProperties(nodes, item)
+  }
+
+  _replaceOptionProperties(nodes, item) {
+    const keys = Object.keys(item);
+
+    for (const node of nodes) {
+      this._setOriginalText(node);
+    }
+    for (const key of keys) {
+      for (const node of nodes) {
+        this._walkText(key, node, item, nodes);
+      }
+    }
+  }
+
+  _setOriginalText(node) {
+    if (node.nodeType === 3) {
+      node.parentNode.setAttribute('data-original-text', node.data);
+    }
+    if (node.nodeType === 1 && node.nodeName !== "SCRIPT") {
+      for (var i = 0; i < node.childNodes.length; i++) {
+        this._setOriginalText(node.childNodes[i]);
+      }
+    }
+  }
+
+  _walkText(key, node, item, nodes) {
+    if (node.nodeType === 3) {
+      if (node.parentNode.dataset.originalText.includes('[[option.' + key + ']]')) {
+        node.parentNode.setAttribute('data-item-value', item[this.itemValue]);
+        node.data = node.parentNode.dataset.originalText.replace('[[option.' + key + ']]', item[key]);
+      }
+    }
+    if (node.nodeType === 1 && node.nodeName !== "SCRIPT") {
+      for (var i = 0; i < node.childNodes.length; i++) {
+        this._walkText(key, node.childNodes[i], item, nodes);
+      }
+    }
+  }
+
+
+  _onSearch() {
+    if (this.isOpen) {
+      const timeout = setTimeout(() => {
+        if (!this.isSearching) {
+          this.isSearching = true;
+          this.pagination.page = 1;
+          this.selectableItems = [];
+          this._getList();
+        } else {
+          clearTimeout(timeout);
+        }
+      }, 1000);
+    }
+  }
+
+  _getList() {
+
+  }
+
+  static get styles() {
+
+    return css`
+    
+        mwc-list-item{
+        height: auto;
+        min-height: 40px;
+        padding: 10px 20px;
+        } 
+ #optionsMenu {
+display: block;
+position: relative;
+     --mdc-menu-min-width: 100px;
+     --mdc-menu-width: 100%;
+     --mdc-menu-item-height: 30px;
+
+     /* inherits the styles of mwc-list internally */
+     --mdc-theme-primary: blue;
+     --mdc-list-vertical-padding: 0px;
+     --mdc-list-side-padding: 30px;
+     }
+     
+     #optionsMenu .optionsMenu__search-input-container{
+     width: 100%;
+     display: flex;
+     justify-content: center;
+     padding: 5px 20px 0;
+     box-sizing: border-box;
+     }
+     #optionsMenu .optionsMenu__search-input-container mwc-icon-button {
+        --mdc-icon-size: 16px;
+        --mdc-icon-button-size: 24px;
+      }
+     
+.jvx-multiselect {
+	 padding-top: 12px;
+	 margin-top: 4px;
+	 position: relative;
+	 color: darkblue;
+}
+ .jvx-multiselect.jvx-multiselect-error {
+	 color: crimson;
+}
+ .jvx-multiselect.jvx-multiselect-isFocused {
+	 color: aliceblue;
+}
+ .jvx-multiselect.jvx-multiselect-isFocused .input-container::after {
+	 transform: scaleX(1);
+}
+ .jvx-multiselect.jvx-multiselect-isOpen .input-container__arrow {
+	 transform: rotate(180deg);
+}
+ .jvx-multiselect.jvx-multiselect-has-state .input-container::before {
+	 border-color: currentColor;
+}
+ .jvx-multiselect.jvx-multiselect-has-state .input-container label, .jvx-multiselect.jvx-multiselect-has-state .input-container .input-container__arrow > * {
+	 color: currentColor;
+}
+ .jvx-multiselect:not(.jvx-multiselect-has-state) .input-container:hover::before {
+	 border-color: rgba(0, 0, 0, 0.87);
+}
+ .jvx-multiselect.jvx-multiselect-disabled {
+	 pointer-events: none;
+	 color: rgba(0, 0, 0, 0.42);
+}
+ .jvx-multiselect.jvx-multiselect-disabled .input-container::before {
+	 border-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.38) 0, rgba(0, 0, 0, 0.38) 2px, transparent 0, transparent 4px) 1 repeat;
+}
+ 
+ .input-container {
+     min-height: 37px;
+     position: relative;
+     -webkit-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     -moz-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     -ms-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     -o-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     }
+ .input-container::before, .input-container::after {
+     bottom: -1px;
+     content: "";
+     left: 0;
+     position: absolute;
+     transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     width: 100%;
+     }
+ .input-container::before {
+     border-color: rgba(0, 0, 0, 0.42);
+     border-style: solid;
+     border-width: thin 0 0;
+     }
+ .input-container::after {
+     transform: scaleX(0);
+     border-style: solid;
+     border-width: thin 0;
+     }
+ .input-container label {
+     position: absolute !important;
+     -webkit-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     -moz-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     -ms-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     -o-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     line-height: 2.3;
+     color: currentColor;
+     }
+      .input-container .input-container__remove-button-container{
+      height: 37px;
+      display: flex;
+      align-items: center;
+      }
+      .input-container .input-container__remove-button{
+      cursor: pointer;
+      font-size: 15px;
+      }
+ .input-container .input-container__arrow > * {
+     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     }
+ .input-container.selection-active label, .input-container.menu-is-open label {
+     transform: translateY(-18px) scale(0.75) translateX(-6px);
+     transform-origin: 20px;
+     display: inline;
+     line-height: 21px;
+     color: aliceblue;
+     }
+ .input-container .input-container__selected-container {
+     display: flex;
+     width: 100%;
+     position: relative;
+     left: 0;
+     top: 0;
+     min-height: 32px;
+     }
+ .input-container .input-container__selected-container .input-container__selected {
+     color: beige;
+     flex: 1 1 100%;
+     left: 0;
+     min-height: 100%;
+     display: flex;
+     align-items: center;
+     max-height: 100%;
+     flex-wrap: wrap;
+     }
+ .input-container .input-container__selected-container .input-container__selected .input__item {
+     opacity: 1;
+     }
+ .input-container .input-container__selected-container .input-container__arrow {
+     width: 24px;
+     height: 100%;
+     display: flex;
+     align-self: center;
+     align-items: center;
+     transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+     }
+ .input-container .input-container__selected-container .input-container__arrow .lds-ring {
+     display: inline-block;
+     position: relative;
+     width: 24px;
+     height: 24px;
+     }
+ .input-container .input-container__selected-container .input-container__arrow .lds-ring div {
+     box-sizing: border-box;
+     display: block;
+     position: absolute;
+     width: 16px;
+     height: 16px;
+     margin: 4px;
+     border: 2px solid aliceblue;
+     border-radius: 50%;
+     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+     border-color: aliceblue transparent transparent transparent;
+     }
+ .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(1) {
+     animation-delay: -0.45s;
+     }
+ .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(2) {
+     animation-delay: -0.3s;
+     }
+ .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(3) {
+     animation-delay: -0.15s;
+     }
+
+  `;
+  }
+}
+
+window.customElements.define('jvx-multiselect', JvxMultiselect);

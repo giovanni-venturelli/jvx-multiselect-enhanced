@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>jvx-multiselect demo</title>
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+
+    <script type="module">
+      import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+      import '@polymer/iron-demo-helpers/demo-snippet';
+    </script>
+
+    <script type="module" src="../jvx-multiselect.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet"></link>
+    <custom-style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+            .option-item{font-size: 11px;}
+        </style>
+    </custom-style>
+</head>
+<body>
+<div class="vertical-section-container centered">
+    <h3>Basic jvx-multiselect demo</h3>
+    <demo-snippet>
+        <template>
+            <jvx-multiselect searchInput multi label="Seleziona" closeOnClick="true" options='[
+  {"text":"Passed Value 1","value":1},
+  {"text":"Passed Value 2","value":2},
+  {"text":"Passed Value 3","value":3}
+]' value='[
+  {"text":"Passed Value 2","value":2}
+]'>
+                <div slot="option-item"><div class="option-item"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div></div></div>
+
+            </jvx-multiselect>
+
+        </template>
+    </demo-snippet>
+</div>
+</body>
+</html>
