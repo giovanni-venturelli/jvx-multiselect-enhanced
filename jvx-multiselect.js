@@ -1,4 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
+import {} from '@polymer/polymer/lib/utils/templatize.js'
+import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 import {classMap} from 'lit-html/directives/class-map';
 import {repeat} from 'lit-html/directives/repeat';
 import '@material/mwc-button';
@@ -50,7 +52,7 @@ class JvxMultiselect extends LitElement {
      </span>`
       : html`
         ${repeat(this.value, item => item[this.itemValue], (item, index) => html`
-            <div> ${item[this.itemText]}</div>
+  <div> ${item[this.itemText]}</div>     
         `)}
       `}
       </div>  
@@ -111,16 +113,23 @@ class JvxMultiselect extends LitElement {
              <mwc-list-item class="list-option"  .selected="${item.selected}" .activated="${item.selected}" value="${item[this.itemValue]}" @click="${(e) => {
       this.select(item)
     }}">
-             
-      <slot name="option-item" @slotchange="${(e) => {
-      this._onOptionSlotChange(e, item)
-    }}" > ${item[this.itemText]}</slot>
+             <div class="option-item" data-value="${item[this.itemValue]}">
+      ${item[this.itemText]}
+      </div>
                       
                    </mwc-list-item>`)}
             </mwc-list>
         <!--      endregion -->
         </mwc-menu>
         <!-- endregion -->
+        </div>
+      </div>
+      
+      <div style="display: none">
+        <div id="option-item-template">
+            <div>
+                <slot name="option-item"></slot>
+            </div>
         </div>
       </div>
     `;
@@ -130,7 +139,11 @@ class JvxMultiselect extends LitElement {
     const self = this;
     return {
       outlined: {type: Boolean, reflect: true},
-      selectableItems: {type: Array, reflect: true, attribute: false},
+      selectableItems: {
+        type: Array, reflect: true, attribute: false,
+        hasChanged: (val) => {
+        }
+      },
       selected: {
         type: Array,
         reflect: true,
@@ -197,6 +210,15 @@ class JvxMultiselect extends LitElement {
     };
     this.itemText = 'text';
     this.itemValue = 'value';
+  }
+
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    console.log(changedProperties); // logs previous values
+    console.dir(this.selectableItems); // logs current value
+    for (const item of this.selectableItems) {
+      this._updateOptionSlot(item);
+    }
   }
 
   connectedCallback() {
@@ -315,12 +337,18 @@ class JvxMultiselect extends LitElement {
   onClose(item) {
   }
 
-  _onOptionSlotChange(e, item) {
-    const optionTemplate = this.shadowRoot.querySelector('#option-template');
+  _updateOptionSlot(item) {
+    const optionTemplate = this.shadowRoot.querySelector('#option-item-template');
 
-    const nodes = e.target.assignedNodes();
-
-    this._replaceOptionProperties(nodes, item)
+    const nodes = this.shadowRoot.querySelectorAll('.option-item');
+    for (const option of nodes) {
+      if (option.dataset.value === item[this.itemValue].toString()) {
+        debugger;
+        option.innerHTML = '';
+        option.appendChild(optionTemplate.cloneNode(true).childNodes[0]);
+        this._replaceOptionProperties(option.childNodes, item)
+      }
+    }
   }
 
   _replaceOptionProperties(nodes, item) {
