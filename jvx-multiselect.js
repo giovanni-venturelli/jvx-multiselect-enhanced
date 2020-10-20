@@ -229,7 +229,7 @@ class JvxMultiselect extends LitElement {
     super.updated(changedProperties);
     console.log(changedProperties); // logs previous values
     console.dir(this.selectableItems); // logs current value
-      // this._updateOptionSlot();
+       this._updateOptionSlot();
   }
 
     connectedCallback() {
