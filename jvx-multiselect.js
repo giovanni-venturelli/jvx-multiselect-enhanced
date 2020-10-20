@@ -113,7 +113,7 @@ class JvxMultiselect extends LitElement {
              <mwc-list-item class="list-option"  .selected="${item.selected}" .activated="${item.selected}" value="${item[this.itemValue]}" @click="${(e) => {
       this.select(item)
     }}">
-             <div class="option-item" data-value="${item[this.itemValue]}">
+             <div class="list-option-content" data-value="${item[this.itemValue]}">
       ${item[this.itemText]}
       </div>
                       
@@ -128,7 +128,7 @@ class JvxMultiselect extends LitElement {
       <div style="display: none">
         <div id="option-item-template">
             <div>
-                <slot name="option-item"></slot>
+                <slot @slotchange="${this._updateOptionSlot()}" name="option-item"></slot>
             </div>
         </div>
       </div>
@@ -216,9 +216,7 @@ class JvxMultiselect extends LitElement {
     super.updated(changedProperties);
     console.log(changedProperties); // logs previous values
     console.dir(this.selectableItems); // logs current value
-    for (const item of this.selectableItems) {
-      this._updateOptionSlot(item);
-    }
+      // this._updateOptionSlot();
   }
 
   connectedCallback() {
@@ -327,7 +325,13 @@ class JvxMultiselect extends LitElement {
     for (let key of Object.keys(el)) {
       if (!!el[key] && typeof el[key] === 'object') {
         ret[key] = this.cloneDeep(el[key]);
-      } else {
+      } else if( Array.isArray(el[key])){
+        ret[key] = [];
+        for(const val of el[key]){
+          ret[key].push(this.cloneDeep(val));
+        }
+      }
+      else {
         ret[key] = el[key];
       }
     }
@@ -337,16 +341,19 @@ class JvxMultiselect extends LitElement {
   onClose(item) {
   }
 
-  _updateOptionSlot(item) {
-    const optionTemplate = this.shadowRoot.querySelector('#option-item-template');
-
-    const nodes = this.shadowRoot.querySelectorAll('.option-item');
-    for (const option of nodes) {
-      if (option.dataset.value === item[this.itemValue].toString()) {
-        debugger;
-        option.innerHTML = '';
-        option.appendChild(optionTemplate.cloneNode(true).childNodes[0]);
-        this._replaceOptionProperties(option.childNodes, item)
+  _updateOptionSlot() {
+    let slot = this.shadowRoot.querySelector('slot[name="option-item"]');
+    if(!!slot) {
+      for (const item of this.selectableItems) {
+        const optionTemplate = slot.assignedNodes()[0];
+        const nodes = this.shadowRoot.querySelectorAll('.list-option-content');
+        for (const option of nodes) {
+          if (option.dataset.value === item[this.itemValue].toString()) {
+            option.innerHTML = '';
+            option.appendChild(optionTemplate.cloneNode(true).childNodes[0]);
+            this._replaceOptionProperties(option.childNodes, item)
+          }
+        }
       }
     }
   }
