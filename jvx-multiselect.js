@@ -366,7 +366,7 @@ class JvxMultiselect extends LitElement {
 
   _updateOptionSlot() {
     let slot = this.shadowRoot.querySelector('slot[name="option-item"]');
-    if(!!slot) {
+    if(!!slot && slot.assignedNodes().length > 0) {
       for (const item of this.selectableItems) {
         const optionTemplate = slot.assignedNodes()[0];
         const nodes = this.shadowRoot.querySelectorAll('.list-option-content');
@@ -481,11 +481,11 @@ class JvxMultiselect extends LitElement {
                     });
 
                     this.dispatchEvent(event);
-                    // if (Array.isArray(response.data.message) && response.data.message.length > 0) {
-                        this._mapResponse([response.data]);
-                    // } else {
-                    //     this.noData = true;
-                    // }
+                    if (Array.isArray(response.data.message) && response.data.message.length > 0) {
+                        this._mapResponse(response.data.message);
+                    } else {
+                        this.noData = true;
+                    }
                     this.pagination.page++;
                     this.totalRows = response.data.totalRows;
                     this.optionsMenu.open = true;
