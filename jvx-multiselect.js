@@ -11,7 +11,8 @@ import '@material/mwc-list/mwc-list-item.js';
 import '@material/mwc-list/mwc-list.js';
 import '@material/mwc-textfield';
 import 'paper-chip';
-import 'jvx-material-input'
+import 'jvx-material-input';
+import { axios } from '@bundled-es-modules/axios';
 
 /**
  * `jvx-multiselect`
@@ -22,22 +23,22 @@ import 'jvx-material-input'
  * @demo demo/index.html
  */
 class JvxMultiselect extends LitElement {
-  render() {
-    return html`
+    render() {
+        return html`
       <div style="position:relative; display: inline;" class=${classMap({
-      'jvx-multiselect': true,
-      'jvx-multiselect-error': this.hasErrors,
-      'jvx-multiselect-isFocused': this.isOpen || this.isFocused,
-      'jvx-multiselect-isOpen': this.isOpen,
-      'jvx-multiselect-has-state': this.isOpen || this.hasErrors === true || this.disabled,
-      'jvx-multiselect-disabled': this.disabled
-    })}>
+            'jvx-multiselect': true,
+            'jvx-multiselect-error': this.hasErrors,
+            'jvx-multiselect-isFocused': this.isOpen || this.isFocused,
+            'jvx-multiselect-isOpen': this.isOpen,
+            'jvx-multiselect-has-state': this.isOpen || this.hasErrors === true || this.disabled,
+            'jvx-multiselect-disabled': this.disabled
+        })}>
       <!-- region input container -->
         <div id="multiInputField" class=${classMap({
-      'input-container': true,
-      'menu-is-open': this.isOpen,
-      'selection-active': this.value !== null && this.value.length > 0
-    })} >
+            'input-container': true,
+            'menu-is-open': this.isOpen,
+            'selection-active': this.value !== null && this.value.length > 0
+        })} >
         <label>${this.label}</label>
         <div class="input-container__selected-container" @click="${this.toggleMenu}">
       <div class="input-container__selected"> 
@@ -46,11 +47,11 @@ class JvxMultiselect extends LitElement {
        ${repeat(this.value, item => item[this.itemValue], (item, index) => html`
           <paper-chip noHover="true" label="${item[this.itemText]}" closable 
           @chip-removed="${() => {
-        this.select(item)
-      }}">
+                this.select(item)
+            }}">
           </paper-chip>`)}
      </span>`
-      : html`
+            : html`
         ${repeat(this.value, item => item[this.itemValue], (item, index) => html`
   <div> ${item[this.itemText]}</div>     
         `)}
@@ -60,13 +61,13 @@ class JvxMultiselect extends LitElement {
         ${this.value.length > 0 && this.multi === false && this.clearable === true ? html`
         <div class="input-container__remove-button-container">
           <mwc-icon @click="${(e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      this.select(this.value[0])
-    }}" class="input-container__remove-button">
+            e.preventDefault();
+            e.stopPropagation();
+            this.select(this.value[0])
+        }}" class="input-container__remove-button">
         close
         </mwc-icon></div>` : html``
-    }
+        }
         <!--- endregion -->
         <!-- region arrow icon -->
         <div class="input-container__arrow">
@@ -111,8 +112,8 @@ class JvxMultiselect extends LitElement {
             <mwc-list multi="${this.multi}">
         ${repeat(this.selectableItems, item => item[this.itemValue], (item, index) => html`
              <mwc-list-item class="list-option"  .selected="${item.selected}" .activated="${item.selected}" value="${item[this.itemValue]}" @click="${(e) => {
-      this.select(item)
-    }}">
+            this.select(item)
+        }}">
              <div class="option-item" data-value="${item[this.itemValue]}">
       ${item[this.itemText]}
       </div>
@@ -133,285 +134,398 @@ class JvxMultiselect extends LitElement {
         </div>
       </div>
     `;
-  }
+    }
 
-  static get properties() {
-    const self = this;
-    return {
-      outlined: {type: Boolean, reflect: true},
-      selectableItems: {
-        type: Array, reflect: true, attribute: false,
-        hasChanged: (val) => {
+    static get properties() {
+        const self = this;
+        return {
+            outlined: {type: Boolean, reflect: true},
+            selectableItems: {
+                type: Array, reflect: true, attribute: false,
+                hasChanged: (val) => {
+                }
+            },
+            selected: {
+                type: Array,
+                reflect: true,
+                attribute: false,
+            },
+            options: {
+                type: Array, reflect: true
+            },
+            multi: {type: Boolean, reflect: true, attribute: 'multi'},
+            closeOnClick: {type: Boolean, reflect: true},
+            label: {type: String, reflect: true},
+            value: {type: Array, reflect: true},
+            isLoading: {type: Boolean, reflect: true},
+            isOpen: {type: Boolean, reflect: true, attribute: false},
+            isFocused: {type: Boolean, reflect: true, attribute: false},
+            hasErrors: {type: Boolean, reflect: true, attribute: false},
+            isSearching: {type: Boolean, reflect: true, attribute: false},
+            searchValue: {type: String, reflect: true, attribute: false},
+            pagination: {type: Object, reflect: true, attribute: false},
+            disabled: {type: Boolean, reflect: true},
+            clearable: {type: Boolean, reflect: true},
+            searchInput: {type: Boolean, reflect: true},
+            advancedSearch: {type: Boolean, reflect: true},
+            noData: {type: Boolean, reflect: true, attribute: false},
+            useOnlyPostParameters: {type: Boolean, reflect: true},
+            postParameters: {type: Object, reflect: true},
+            filter: {type: Object, reflect: true},
+            labels: {type: Object, reflect: true},
+            url: {type: String, reflect: true},
+            /**
+             * The property of the response object which has to be translated to the value property of the options.
+             */
+            itemValue: {
+                type: String,
+                reflect: true
+            },
+
+            /**
+             * The property of the response object which has to be translated to the text property of the options.
+             */
+            itemText: {
+                type: String,
+                reflect: true
+            },
+        };
+    }
+
+    constructor() {
+        super();
+        this.selectableItems = [];
+        this.selected = [];
+        this.multi = false;
+        this.value = [];
+        this.options = [];
+        this.isLoading = false;
+        this.isOpen = false;
+        this.isFocused = false;
+        this.hasErrors = false;
+        this.isSearching = false;
+        this.disabled = false;
+        this.label = '';
+        this.closeOnClick = false;
+        this.clearable = true;
+        this.searchValue = '';
+        this.searchInput = false;
+        this.advancedSearch = false;
+        this.pagination = {
+            page: 1,
+            pageSize: 15
+        };
+        this.itemText = 'text';
+        this.itemValue = 'value';
+        this.noData = false;
+        this.filter = {};
+        this.postParameters = {};
+        this.useOnlyPostParameters = false;
+        this.labels = {};
+        this.url = '';
+    }
+
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        console.log(changedProperties); // logs previous values
+        console.dir(this.selectableItems); // logs current value
+        for (const item of this.selectableItems) {
+            this._updateOptionSlot(item);
         }
-      },
-      selected: {
-        type: Array,
-        reflect: true,
-        attribute: false,
-      },
-      options: {
-        type: Array, reflect: true
-      },
-      multi: {type: Boolean, reflect: true, attribute: 'multi'},
-      closeOnClick: {type: Boolean, reflect: true},
-      label: {type: String, reflect: true},
-      value: {type: Array, reflect: true},
-      isLoading: {type: Boolean, reflect: true},
-      isOpen: {type: Boolean, reflect: true, attribute: false},
-      isFocused: {type: Boolean, reflect: true, attribute: false},
-      hasErrors: {type: Boolean, reflect: true, attribute: false},
-      isSearching: {type: Boolean, reflect: true, attribute: false},
-      searchValue: {type: String, reflect: true, attribute: false},
-      pagination: {type: Object, reflect: true, attribute: false},
-      disabled: {type: Boolean, reflect: true},
-      clearable: {type: Boolean, reflect: true},
-      searchInput: {type: Boolean, reflect: true},
-      advancedSearch: {type: Boolean, reflect: true},
-      /**
-       * The property of the response object which has to be translated to the value property of the options.
-       */
-      itemValue: {
-        type: String,
-        reflect: true
-      },
-
-      /**
-       * The property of the response object which has to be translated to the text property of the options.
-       */
-      itemText: {
-        type: String,
-        reflect: true
-      },
-    };
-  }
-
-  constructor() {
-    super();
-    this.selectableItems = [];
-    this.selected = [];
-    this.multi = false;
-    this.value = [];
-    this.options = [{text: 'Value 1', value: 1}, {text: 'Value 2', value: 2}, {text: 'Value 3', value: 3}];
-    this.isLoading = false;
-    this.isOpen = false;
-    this.isFocused = false;
-    this.hasErrors = false;
-    this.isSearching = false;
-    this.disabled = false;
-    this.label = '';
-    this.closeOnClick = false;
-    this.clearable = true;
-    this.searchValue = '';
-    this.searchInput = false;
-    this.advancedSearch = false;
-    this.pagination = {
-      page: 1,
-      pageSize: 15
-    };
-    this.itemText = 'text';
-    this.itemValue = 'value';
-  }
-
-  updated(changedProperties) {
-    super.updated(changedProperties);
-    console.log(changedProperties); // logs previous values
-    console.dir(this.selectableItems); // logs current value
-    for (const item of this.selectableItems) {
-      this._updateOptionSlot(item);
-    }
-  }
-
-  connectedCallback() {
-    super.connectedCallback()
-
-    // sets the selectable items
-    for (const item of this.options) {
-      const index = this.selectableItems.find((s) => s[this.itemValue] === item[this.itemValue]);
-      if (index > -1) {
-        this.selected = this.selectableItems[index].selected;
-        this.selectableItems[index] = this.cloneDeep(item);
-        this.selectableItems[index].selected = selected;
-        this.selectableItems = [...this.selectableItems];
-      } else {
-        let temp = this.cloneDeep(item);
-        temp.selected = false;
-        this.selectableItems = [...this.selectableItems, temp];
-      }
     }
 
-    // sets the default selected items
-    for (const val of this.value) {
-      this.selected = [...this.selected, this.cloneDeep(val)];
-      this.updateSelectableItems();
+    connectedCallback() {
+        super.connectedCallback()
+
+        // sets the selectable items
+        for (const item of this.options) {
+            const index = this.selectableItems.find((s) => s[this.itemValue] === item[this.itemValue]);
+            if (index > -1) {
+                this.selected = this.selectableItems[index].selected;
+                this.selectableItems[index] = this.cloneDeep(item);
+                this.selectableItems[index].selected = selected;
+                this.selectableItems = [...this.selectableItems];
+            } else {
+                let temp = this.cloneDeep(item);
+                temp.selected = false;
+                this.selectableItems = [...this.selectableItems, temp];
+            }
+        }
+
+        // sets the default selected items
+        for (const val of this.value) {
+            this.selected = [...this.selected, this.cloneDeep(val)];
+            this.updateSelectableItems();
+        }
+
+        // slots[1].addEventListener('slotchange', function(e) {
+        //   let nodes = slots[1].assignedNodes();
+        //   console.log('Element in Slot "' + slots[1].name + '" changed to "' + nodes[0].outerHTML + '".');
+        // });
     }
 
-    // slots[1].addEventListener('slotchange', function(e) {
-    //   let nodes = slots[1].assignedNodes();
-    //   console.log('Element in Slot "' + slots[1].name + '" changed to "' + nodes[0].outerHTML + '".');
-    // });
-  }
-
-  get optionsMenu() {
-    return this.shadowRoot.querySelector('#optionsMenu');
-  }
-
-  get jvxList() {
-    return this.shadowRoot.querySelector('#jvxList');
-  }
-
-  toggleMenu() {
-    this.optionsMenu.open = !this.optionsMenu.open;
-  }
-
-  onMenuToggled() {
-    this.isOpen = this.optionsMenu.open;
-    this.isFocused = this.optionsMenu.open;
-  }
-
-  select(item) {
-    const index = this.selected.findIndex(i => i[this.itemValue] === item[this.itemValue]);
-    if (index > -1) {
-      const temp = [...this.selected]
-      temp.splice(index, 1);
-      this.selected = [...temp];
-    } else {
-      if (!this.multi) {
-        this.selected.length = 0;
-      }
-      this.selected = [...this.selected, this.cloneDeep(item)];
+    get optionsMenu() {
+        return this.shadowRoot.querySelector('#optionsMenu');
     }
-    if (this.closeOnClick && !this.multi) {
-      this.optionsMenu.open = false;
+
+    get jvxList() {
+        return this.shadowRoot.querySelector('#jvxList');
     }
-    this.updateSelectableItems();
 
-    const event = new CustomEvent('input', {
-      detail: this.selected
-    });
-    //TODO: rimuovere per pubblicazione
-    this.value = this.selected;
-    // FINE TODO
-
-    this.dispatchEvent(event);
-  }
-
-  showAdvancedSearch() {
-    const event = new CustomEvent('showAdvancedSearch');
-    this.dispatchEvent(event);
-  }
-
-  updateSelectableItems() {
-    for (let i = 0; i < this.selectableItems.length; i++) {
-      const item = this.selectableItems[i];
-      item.selected = this.selected.findIndex((v) => v[this.itemValue] === item[this.itemValue]) > -1;
-      this.selectableItems[i] = {...item};
-    }
-    this.selectableItems = [...this.selectableItems];
-  }
-
-
-  get listOptions() {
-    return this.shadowRoot.querySelector('.list-option');
-  }
-
-  get multiValue() {
-    return this.selected.filter((v) => this.multi);
-  }
-
-  get singleValue() {
-    return this.selected.filter((v) => !this.multi);
-  }
-
-  cloneDeep(el) {
-    let ret = {};
-    for (let key of Object.keys(el)) {
-      if (!!el[key] && typeof el[key] === 'object') {
-        ret[key] = this.cloneDeep(el[key]);
-      } else {
-        ret[key] = el[key];
-      }
-    }
-    return ret;
-  }
-
-  onClose(item) {
-  }
-
-  _updateOptionSlot(item) {
-    const optionTemplate = this.shadowRoot.querySelector('#option-item-template');
-
-    const nodes = this.shadowRoot.querySelectorAll('.option-item');
-    for (const option of nodes) {
-      if (option.dataset.value === item[this.itemValue].toString()) {
-        debugger;
-        option.innerHTML = '';
-        option.appendChild(optionTemplate.cloneNode(true).childNodes[0]);
-        this._replaceOptionProperties(option.childNodes, item)
-      }
-    }
-  }
-
-  _replaceOptionProperties(nodes, item) {
-    const keys = Object.keys(item);
-
-    for (const node of nodes) {
-      this._setOriginalText(node);
-    }
-    for (const key of keys) {
-      for (const node of nodes) {
-        this._walkText(key, node, item, nodes);
-      }
-    }
-  }
-
-  _setOriginalText(node) {
-    if (node.nodeType === 3) {
-      node.parentNode.setAttribute('data-original-text', node.data);
-    }
-    if (node.nodeType === 1 && node.nodeName !== "SCRIPT") {
-      for (var i = 0; i < node.childNodes.length; i++) {
-        this._setOriginalText(node.childNodes[i]);
-      }
-    }
-  }
-
-  _walkText(key, node, item, nodes) {
-    if (node.nodeType === 3) {
-      if (node.parentNode.dataset.originalText.includes('[[option.' + key + ']]')) {
-        node.parentNode.setAttribute('data-item-value', item[this.itemValue]);
-        node.data = node.parentNode.dataset.originalText.replace('[[option.' + key + ']]', item[key]);
-      }
-    }
-    if (node.nodeType === 1 && node.nodeName !== "SCRIPT") {
-      for (var i = 0; i < node.childNodes.length; i++) {
-        this._walkText(key, node.childNodes[i], item, nodes);
-      }
-    }
-  }
-
-
-  _onSearch() {
-    if (this.isOpen) {
-      const timeout = setTimeout(() => {
-        if (!this.isSearching) {
-          this.isSearching = true;
-          this.pagination.page = 1;
-          this.selectableItems = [];
-          this._getList();
+    toggleMenu() {
+        if(!this.optionsMenu.open){
+            if (!this.options || this.options.length === 0) {
+                this.pagination.page = 1;
+                this.selectableItems = [];
+                this._getList();
+            } else {
+                this.optionsMenu.open = !this.optionsMenu.open;
+            }
         } else {
-          clearTimeout(timeout);
+            this.optionsMenu.open = !this.optionsMenu.open;
         }
-      }, 1000);
     }
-  }
 
-  _getList() {
+    onMenuToggled() {
+        this.isOpen = this.optionsMenu.open;
+        this.isFocused = this.optionsMenu.open;
+    }
 
-  }
+    select(item) {
+        const index = this.selected.findIndex(i => i[this.itemValue] === item[this.itemValue]);
+        if (index > -1) {
+            const temp = [...this.selected]
+            temp.splice(index, 1);
+            this.selected = [...temp];
+        } else {
+            if (!this.multi) {
+                this.selected.length = 0;
+            }
+            this.selected = [...this.selected, this.cloneDeep(item)];
+        }
+        if (this.closeOnClick && !this.multi) {
+            this.optionsMenu.open = false;
+        }
+        this.updateSelectableItems();
 
-  static get styles() {
+        const event = new CustomEvent('input', {
+            detail: this.selected
+        });
+        //TODO: rimuovere per pubblicazione
+        this.value = this.selected;
+        // FINE TODO
 
-    return css`
+        this.dispatchEvent(event);
+    }
+
+    showAdvancedSearch() {
+        const event = new CustomEvent('showAdvancedSearch');
+        this.dispatchEvent(event);
+    }
+
+    updateSelectableItems() {
+        for (let i = 0; i < this.selectableItems.length; i++) {
+            const item = this.selectableItems[i];
+            item.selected = this.selected.findIndex((v) => v[this.itemValue] === item[this.itemValue]) > -1;
+            this.selectableItems[i] = {...item};
+        }
+        this.selectableItems = [...this.selectableItems];
+    }
+
+
+    get listOptions() {
+        return this.shadowRoot.querySelector('.list-option');
+    }
+
+    get multiValue() {
+        return this.selected.filter((v) => this.multi);
+    }
+
+    get singleValue() {
+        return this.selected.filter((v) => !this.multi);
+    }
+
+    cloneDeep(el) {
+        let ret = {};
+        for (let key of Object.keys(el)) {
+            if (!!el[key] && typeof el[key] === 'object') {
+                ret[key] = this.cloneDeep(el[key]);
+            } else {
+                ret[key] = el[key];
+            }
+        }
+        return ret;
+    }
+
+    onClose(item) {
+    }
+
+    _updateOptionSlot(item) {
+        const optionTemplate = this.shadowRoot.querySelector('#option-item-template');
+
+        const nodes = this.shadowRoot.querySelectorAll('.option-item');
+        for (const option of nodes) {
+            if (option.dataset.value === item[this.itemValue].toString()) {
+                option.innerHTML = '';
+                option.appendChild(optionTemplate.cloneNode(true).childNodes[0]);
+                this._replaceOptionProperties(option.childNodes, item)
+            }
+        }
+    }
+
+    _replaceOptionProperties(nodes, item) {
+        const keys = Object.keys(item);
+
+        for (const node of nodes) {
+            this._setOriginalText(node);
+        }
+        for (const key of keys) {
+            for (const node of nodes) {
+                this._walkText(key, node, item, nodes);
+            }
+        }
+    }
+
+    _setOriginalText(node) {
+        if (node.nodeType === 3) {
+            node.parentNode.setAttribute('data-original-text', node.data);
+        }
+        if (node.nodeType === 1 && node.nodeName !== "SCRIPT") {
+            for (var i = 0; i < node.childNodes.length; i++) {
+                this._setOriginalText(node.childNodes[i]);
+            }
+        }
+    }
+
+    _walkText(key, node, item, nodes) {
+        if (node.nodeType === 3) {
+            if (node.parentNode.dataset.originalText.includes('[[option.' + key + ']]')) {
+                node.parentNode.setAttribute('data-item-value', item[this.itemValue]);
+                node.data = node.parentNode.dataset.originalText.replace('[[option.' + key + ']]', item[key]);
+            }
+        }
+        if (node.nodeType === 1 && node.nodeName !== "SCRIPT") {
+            for (var i = 0; i < node.childNodes.length; i++) {
+                this._walkText(key, node.childNodes[i], item, nodes);
+            }
+        }
+    }
+
+
+    _onSearch() {
+        if (this.isOpen) {
+            const timeout = setTimeout(() => {
+                if (!this.isSearching) {
+                    this.isSearching = true;
+                    this.pagination.page = 1;
+                    this.selectableItems = [];
+                    this._getList();
+                } else {
+                    clearTimeout(timeout);
+                }
+            }, 1000);
+        }
+    }
+
+    /**
+     * Chiamata backend
+     * @private
+     */
+    _getList() {
+        this.noData = false;
+        let headers = {
+            Accept: 'application/json',
+            'Access-Control-Allow-Origin': '*', // cors
+            'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS', // cors
+            'Content-Type': 'application/json',
+            Authorization: window.sessionStorage.getItem('trusted')
+        };
+
+        let data = this.postParameters;
+
+        if (!this.useOnlyPostParameters) {
+            Object.assign(data, {
+                name: this.searchValue,
+                page: this.pagination.page,
+                pageSize: this.pagination.pageSize,
+                filter: !!this.filter && (typeof this.filter === 'object' || this.filter.length > 0) ? JSON.stringify(this.filter) : null
+            });
+        }
+
+        return new Promise((resolve, reject) => {
+            this.isLoading = true;
+            if (typeof this.url === 'undefined' || this.url === null) {
+                reject();
+            }
+
+            axios({
+                url: this.url,
+                method: 'GET',
+                mode: 'no-cors', // cors
+                headers,
+                withCredentials: true,
+                credentials: 'same-origin', // cache: 'default',
+                data: data
+            }).then(response => {
+                if (typeof response.data.invalidJwt === 'undefined') {
+                    const event = new CustomEvent('response', {
+                        detail: response.data
+                    });
+
+                    this.dispatchEvent(event);
+                    // if (Array.isArray(response.data.message) && response.data.message.length > 0) {
+                        this._mapResponse([response.data]);
+                    // } else {
+                    //     this.noData = true;
+                    // }
+                    this.pagination.page++;
+                    this.totalRows = response.data.totalRows;
+                    this.optionsMenu.open = true;
+                    resolve(response.data);
+                } else {
+                    const event = new CustomEvent('invalid-jwt', {
+                        detail: response.data
+                    });
+                    this.dispatchEvent(event);
+                    reject();
+                }
+            }).catch(e => {
+                const event = new CustomEvent('error', {
+                    detail: e
+                });
+                this.dispatchEvent(event);
+                reject(e);
+            })
+                .finally(() => {
+                    setTimeout(() => {
+                        this.isSearching = false;
+                        this.isLoading = false;
+                    }, 1000);
+                });
+        });
+    }
+
+        _mapResponse(newItems)
+        {
+            for (const tempItem of newItems) {
+                const item = JSON.parse(JSON.stringify(tempItem));
+                if (Object.keys(this.labels).length > 0) {
+                    for(const key of Object.keys(this.labels)) {
+                        if (item[key]) {
+                            item[this.labels[key]] = item[key];
+                        }
+                    }
+                }
+                item.selected = this.value.findIndex(m => m[this.itemValue] === item[this.itemValue]) !== -1;
+                this.selectableItems.push(item);
+            }
+        }
+
+
+
+    static get styles() {
+
+        return css`
     
         mwc-list-item{
         height: auto;
@@ -592,7 +706,7 @@ position: relative;
      }
 
   `;
-  }
+    }
 }
 
 window.customElements.define('jvx-multiselect', JvxMultiselect);

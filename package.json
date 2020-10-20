@@ -6,6 +6,7 @@
     "serve": "polymer serve --open"
   },
   "dependencies": {
+    "@bundled-es-modules/axios": "^0.18.1",
     "@material/chips": "^7.0.0",
     "@material/mwc-button": "^0.19.1",
     "@material/mwc-icon": "^0.19.1",
