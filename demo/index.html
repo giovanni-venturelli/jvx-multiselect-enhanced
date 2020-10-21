@@ -27,6 +27,13 @@
     <h3>Basic jvx-multiselect demo</h3>
     <demo-snippet>
         <template>
+            <style>
+                jvx-multiselect {
+                    --jvx-multiselect-primary: green;
+                    --jvx-multiselect-warn: crimson;
+                    --jvx-multiselect-accent: #ffa200;
+                }
+            </style>
             <jvx-multiselect searchInput multi label="Seleziona" closeOnClick="true" options='[
   {"text":"Passed Value 1","value":1},
   {"text":"Passed Value 2","value":2},

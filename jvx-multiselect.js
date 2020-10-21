@@ -25,6 +25,9 @@ import { axios } from '@bundled-es-modules/axios';
 class JvxMultiselect extends LitElement {
     render() {
         return html`
+<style>
+
+</style>
       <div style="position:relative; display: inline;" class=${classMap({
             'jvx-multiselect': true,
             'jvx-multiselect-error': this.hasErrors,
@@ -534,7 +537,9 @@ class JvxMultiselect extends LitElement {
     static get styles() {
 
         return css`
-    
+    mwc-list{
+--mdc-theme-primary: var(--jvx-multiselect-primary, blue);
+}
         mwc-list-item{
         height: auto;
         min-height: 40px;
@@ -569,13 +574,13 @@ position: relative;
 	 padding-top: 12px;
 	 margin-top: 4px;
 	 position: relative;
-	 color: darkblue;
+	 color: var(--jvx-multiselect-primary, black);
 }
  .jvx-multiselect.jvx-multiselect-error {
-	 color: crimson;
+	 color: var(--jvx-multiselect-warn, red);
 }
  .jvx-multiselect.jvx-multiselect-isFocused {
-	 color: aliceblue;
+	 color: var(--jvx-multiselect-accent, green);
 }
  .jvx-multiselect.jvx-multiselect-isFocused .input-container::after {
 	 transform: scaleX(1);
@@ -654,7 +659,7 @@ position: relative;
      transform-origin: 20px;
      display: inline;
      line-height: 21px;
-     color: aliceblue;
+     color: var(--jvx-multiselect-accent, green);
      }
  .input-container .input-container__selected-container {
      display: flex;
@@ -698,10 +703,10 @@ position: relative;
      width: 16px;
      height: 16px;
      margin: 4px;
-     border: 2px solid aliceblue;
+     border: 2px solid var(--jvx-multiselect-accent, green);
      border-radius: 50%;
      animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-     border-color: aliceblue transparent transparent transparent;
+     border-color: var(--jvx-multiselect-accent, green) transparent transparent transparent;
      }
  .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(1) {
      animation-delay: -0.45s;
