@@ -25,9 +25,6 @@ import { axios } from '@bundled-es-modules/axios';
 class JvxMultiselect extends LitElement {
     render() {
         return html`
-<style>
-
-</style>
       <div style="position:relative; display: inline;" class=${classMap({
             'jvx-multiselect': true,
             'jvx-multiselect-error': this.hasErrors,
@@ -537,6 +534,9 @@ class JvxMultiselect extends LitElement {
     static get styles() {
 
         return css`
+        paper-chip{
+        --paper-chip-background-color:var(--jvx-multiselect-primary, blue);
+        }
     mwc-list{
 --mdc-theme-primary: var(--jvx-multiselect-primary, blue);
 }
