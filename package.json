@@ -15,7 +15,7 @@
     "@material/mwc-menu": "^0.19.1",
     "@material/mwc-textfield": "^0.19.1",
     "@polymer/polymer": "^3.0.0",
-    "jvx-material-input": "^1.0.3",
+    "jvx-material-input": "^1.0.4",
     "lit-element": "^2.4.0",
     "paper-chip": "^3.0.0"
   },
