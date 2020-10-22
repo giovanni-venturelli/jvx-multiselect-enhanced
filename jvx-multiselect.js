@@ -92,20 +92,22 @@ class JvxMultiselect extends LitElement {
                     
           <!-- region search input -->
           <div class="optionsMenu__search-input-container">
-            <jvx-material-input label="searchLabel"
+          ${this.searchInput? html`<jvx-material-input
+                            label="searchLabel"
+                            type="text"
                           @val-change="${this._onSearch}" 
                           background-color="transparent"
                           class="ma-0 pa-0 jvx-multiselect-search-field"
                           flat
                           @click:append="$emit('showAdvancedSearch')"
                           @click:clear="${this._onSearch}"
-                          v-if="searchInput"
                           value="${this.searchValue}">
                           ${this.advancedSearch ? html`
                           <div slot="append">
                              <mwc-icon-button id="advanced-search-button" icon="more_vert" @click="${this.showAdvancedSearch}">
                             </mwc-icon-button></div>` : html``}
-            </jvx-material-input>
+            </jvx-material-input>`: html``}
+            
         </div>
         <!-- endregion -->
         <!--       region list-->
@@ -157,7 +159,7 @@ class JvxMultiselect extends LitElement {
             closeOnClick: {type: Boolean, reflect: true},
             label: {type: String, reflect: true},
             value: {type: Array, reflect: true},
-            isLoading: {type: Boolean, reflect: true},
+            isLoading: {type: Boolean, reflect: true, attribute: false},
             isOpen: {type: Boolean, reflect: true, attribute: false},
             isFocused: {type: Boolean, reflect: true, attribute: false},
             hasErrors: {type: Boolean, reflect: true, attribute: false},
@@ -218,10 +220,10 @@ class JvxMultiselect extends LitElement {
         this.itemText = 'text';
         this.itemValue = 'value';
         this.noData = false;
-        this.filter = {};
-        this.postParameters = {};
+        this.filter = null;
+        this.postParameters = null;
         this.useOnlyPostParameters = false;
-        this.labels = {};
+        this.labels = null;
         this.url = '';
     }
 
@@ -517,7 +519,7 @@ class JvxMultiselect extends LitElement {
         {
             for (const tempItem of newItems) {
                 const item = JSON.parse(JSON.stringify(tempItem));
-                if (Object.keys(this.labels).length > 0) {
+                if (!!this.labels && Object.keys(this.labels).length > 0) {
                     for(const key of Object.keys(this.labels)) {
                         if (item[key]) {
                             item[this.labels[key]] = item[key];
