@@ -17,21 +17,25 @@ npm install jvx-material-multiselect
 
 
 ### Properties/Attributes
-| Name                    | Type      | Default | Description
-| ----------------------- | --------- | ------- | ---------------------------------------------------------------------------
-| `multi`                 | `Boolean` | `false` | True if it's a multiselect.
-| `closeOnClick`          | `Boolean` | `false` | True if the options list must be closed on each click outside the component.
-| `label`                 | `String`  | `''`    | The label.
-| `value`                 | `Array`   | `[]`    | The current value of the selection.
-| `disabled`              | `Boolean` | `false` | True to disable the select.
-| `clearable`             | `Boolean` | `false` | True to enable the empty selection.
-| `searchInput`           | `Boolean` | `false` | True to enable the search input for the options list.
-| `advancedSearch`        | `Boolean` | `false` | True to enable the advanced search (searchInput must be true).
-| `useOnlyPostParameters` | `Boolean` | `false` | True to ignore the default pagination.
-| `postParameters`        | `Object`  | `null`  | The custom search value and pagination for the asynchronous selection.
-| `filter`                | `Object`  | `null`  | The custom filter for the post call.
-| `labels`                | `Object`  | `null`  | The dictionary to map the response.
-| `url`                   | `String`  | `''`    | The url to get the options.
+| Name                    | Type             | Default  | Description
+| ----------------------- | ---------------- | ---------| ---------------------------------------------------------------------------
+| `options`               | `Array`          | `[]`     | Array of the options in the form of Objects.
+| `itemText`              | `String`         | `'text'` | The name of the property of the option object that will be displayed as description of the options.
+| `itemValue`             | `String`         | `'value'`| The name of the property of the option object that will be treated as value of the options.
+| `multi`                 | `Boolean`        | `false`  | True if it's a multiselect.
+| `closeOnClick`          | `Boolean`        | `false`  | True if the options list must be closed on each click outside the component.
+| `label`                 | `String`         | `''`     | The label.
+| `value`                 | `Array`          | `[]`     | The current value of the selection.
+| `disabled`              | `Boolean`        | `false`  | True to disable the select.
+| `clearable`             | `Boolean`        | `false`  | True to enable the empty selection.
+| `searchInput`           | `Boolean`        | `false`  | True to enable the search input for the options list.
+| `advancedSearch`        | `Boolean`        | `false`  | True to enable the advanced search (searchInput must be true).
+| `useOnlyPostParameters` | `Boolean`        | `false`  | True to ignore the default pagination.
+| `postParameters`        | `Object`         | `null`   | The custom search value and pagination for the asynchronous selection.
+| `filter`                | `Object`         | `null`   | The custom filter for the post call.
+| `labels`                | `Object`         | `null`   | The dictionary to map the response.
+| `url`                   | `String`         | `''`     | The url to get the options.
+| `requestType`           | `GET`&#124;`POST`| `'GET'`  | The type of the http request.
 
 ### Methods
 *None*

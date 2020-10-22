@@ -191,6 +191,14 @@ class JvxMultiselect extends LitElement {
                 type: String,
                 reflect: true
             },
+
+            /**
+             * The type of the http request.
+             */
+            requestType: {
+                type: String,
+                reflect: true
+            },
         };
     }
 
@@ -225,6 +233,7 @@ class JvxMultiselect extends LitElement {
         this.useOnlyPostParameters = false;
         this.labels = null;
         this.url = '';
+        this.requestType = 'GET';
     }
 
   updated(changedProperties) {
@@ -470,7 +479,7 @@ class JvxMultiselect extends LitElement {
 
             axios({
                 url: this.url,
-                method: 'GET',
+                method: this.requestType,
                 mode: 'no-cors', // cors
                 headers,
                 withCredentials: true,
