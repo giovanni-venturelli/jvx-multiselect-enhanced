@@ -539,6 +539,7 @@ class JvxMultiselect extends LitElement {
         jvx-material-input{
         --jvx-material-input-primary:var(--jvx-multiselect-primary, blue);
         --jvx-material-input-accent:var(--jvx-multiselect-accent, green);
+        --jvx-material-input-error:var(--jvx-multiselect-error, red);
         }
         paper-chip{
         --paper-chip-background-color:var(--jvx-multiselect-primary, blue);

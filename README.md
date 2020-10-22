@@ -17,30 +17,34 @@ npm install jvx-material-multiselect
 
 
 ### Properties/Attributes
-| Name | Type | Default | Description
-| ---- | ---- | ------- | -----------
-| `multi` | `Boolean` | `false` | True if it's a multiselect.
-| `closeOnClick` | `Boolean` | `false` | True if the options list must be closed on each click outside the component.
-| `label` | `String` | `''` | The label.
-| `value` | `Array` | `[]` | The current value of the selection.
-| `disabled` | `Boolean` | `false` | True to disable the select.
-| `clearable` | `Boolean` | `false` | True to enable the empty selection.
-| `searchInput` | `Boolean` | `false` | True to enable the search input for the options list.
-| `advancedSearch` | `Boolean` | `false` | True to enable the advanced search (searchInput must be true).
+| Name                    | Type      | Default | Description
+| ----------------------- | --------- | ------- | ---------------------------------------------------------------------------
+| `multi`                 | `Boolean` | `false` | True if it's a multiselect.
+| `closeOnClick`          | `Boolean` | `false` | True if the options list must be closed on each click outside the component.
+| `label`                 | `String`  | `''`    | The label.
+| `value`                 | `Array`   | `[]`    | The current value of the selection.
+| `disabled`              | `Boolean` | `false` | True to disable the select.
+| `clearable`             | `Boolean` | `false` | True to enable the empty selection.
+| `searchInput`           | `Boolean` | `false` | True to enable the search input for the options list.
+| `advancedSearch`        | `Boolean` | `false` | True to enable the advanced search (searchInput must be true).
 | `useOnlyPostParameters` | `Boolean` | `false` | True to ignore the default pagination.
-| `postParameters` | `Object` | `null` | The custom search value and pagination for the asynchronous selection.
-| `filter` | `Object` | `null` | The custom filter for the post call.
-| `labels` | `Object` | `null` | The dictionary to map the response.
-| `url` | `String` | `''` | The url to get the options.
+| `postParameters`        | `Object`  | `null`  | The custom search value and pagination for the asynchronous selection.
+| `filter`                | `Object`  | `null`  | The custom filter for the post call.
+| `labels`                | `Object`  | `null`  | The dictionary to map the response.
+| `url`                   | `String`  | `''`    | The url to get the options.
 
 ### Methods
 *None*
 
 ### Events
 
-| Event Name | Target         | Detail | Description
-| ---------- | -------------- | ------ | -----------
-| `input`     |               | `String`| Fired when the user changes the value of the input. The detail contains the new value.
+| Event Name            | Target        | Detail  | Description
+| --------------------- | ------------- | ------- | -----------
+| `input`               |               | `Array` | Fired when the user changes the value of the input. The detail contains the value of the selection.
+| `showAdvancedSearch`  |               | *None*  | Fired when the user clicks on the advanced search icon.
+| `response`            |               | `Object`| Fired when the backend call returns successfully. The detail contains the response.
+| `invalid-jwt`         |               | `Object`| Fired when the backend call returns with an invalit jwt error. The detail contains the response.
+| `error`               |               | `String`| Fired when the backend call throws an exception. The detail contains the exception.
 
 ### CSS Custom Properties
 *None*
@@ -49,6 +53,6 @@ npm install jvx-material-multiselect
 
 | Name                                              | Default               | Description
 | ------------------------------------------------- | --------------------- |------------
-| `--jvx-material-input-primary`                    | `blue`                | Color of the filled input's bottom line when idle.
-| `--jvx-material-input-background`                 | `#fff`                | Color of the input's background fill.
-| `--jvx-material-input-accent`                     | `#b949d5`             | Color when active of the underline ripple, the outline, and the caret.
+| `--jvx-material-input-primary`                    | `blue`                | Color of the select bottom line when idle.
+| `--jvx-material-input-accent`                     | `green`               | Color of the underline ripple, the outline, and the caret  when active.
+| `--jvx-material-input-error`                      | `red`                 | Color of the underline ripple, the outline, and the caret when has errors.
