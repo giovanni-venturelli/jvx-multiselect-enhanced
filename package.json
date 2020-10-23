@@ -33,5 +33,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/giovanni-venturelli/jvx-multiselect-enhanced"
-  }
+  },
+  "keywords": [
+    "multiselect",
+    "web component",
+    "material"
+  ]
 }
