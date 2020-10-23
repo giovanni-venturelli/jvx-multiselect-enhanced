@@ -94,7 +94,7 @@ The object template should be
   text: String
 }
 ``` 
-If the object comes in different form, via the property `labels` it is possible to set an object that maps the properties in order to make it readable for the jvx-multiselect.
+If the object comes in different forms, via the property `labels` it is possible to set an object that maps the properties in order to make it readable for the jvx-multiselect.
 For example if the response object template is
 ```javascript
 {
