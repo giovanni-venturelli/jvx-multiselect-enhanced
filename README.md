@@ -36,6 +36,8 @@ npm install jvx-material-multiselect
 | `labels`                | `Object`                    | `null`   | The dictionary to map the response.
 | `url`                   | `String`                    | `''`     | The url to get the options.
 | `requestType`           | <code>GET&#124;POST</code>  | `'GET'`  | The type of the http request.
+| `requestHeaders`           | `Object`                    | `{}`     | The headers of the http request.
+
 
 ### Methods
 *None*
@@ -60,3 +62,71 @@ npm install jvx-material-multiselect
 | `--jvx-material-input-primary`                    | `blue`                | Color of the select bottom line when idle.
 | `--jvx-material-input-accent`                     | `green`               | Color of the underline ripple, the outline, and the caret  when active.
 | `--jvx-material-input-error`                      | `red`                 | Color of the underline ripple, the outline, and the caret when has errors.
+
+### HTTP Request
+#### Request
+The HTTP request can be either a GET or a POST request.
+The user can set the type using the property `requestType` which is set to `GET` by default.
+
+The HTTP request will be executed via [axios](https://github.com/axios/axios).
+
+##### Headers
+The headers can be set in the property `requestHeaders`. By default the jvx-multiselect uses the property `trusted` stored in the sessionStorage.
+The default headers are:
+```javascript
+{
+  Accept: 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
+  'Content-Type': 'application/json',
+  Authorization: window.sessionStorage.getItem('trusted')
+}
+```
+
+#### Response
+By now the response must contain an array of object, stored in the property `message` in the `response.data` object.
+
+The object template should be 
+```javascript
+{
+  value: Number|String,
+  text: String
+}
+``` 
+If the object comes in different form, via the property `labels` it is possible to set an object that maps the properties in order to make it readable for the jvx-multiselect.
+For example if the response object template is
+```javascript
+{
+  id: 1,
+  title: 'This is the title',
+  description: 'This is the description',
+  start: 2020/01/01,
+  end: 2020/03/01
+}
+``` 
+and the property `labels` is
+```javascript
+{
+  id: 'value',
+  title: 'text'
+}
+``` 
+the response object will be mapped like this
+```javascript
+{
+  value: 1,
+  text: 'This is the title',
+  id: 1,
+  title: 'This is the title',
+  description: 'This is the description',
+  start: 2020/01/01,
+  end: 2020/03/01,
+  selected: Boolean
+}
+```
+The user can use the properties `itemText` and `itemValue` to prevent the need for the mapping (being in the example above `itemText = 'title'` and `itemValue = 'id'`.
+
+#### Pagination
+The pagination is not supported yet, but will be in the next releases.
+By now please always set `useOnlyPostParameters` to `true`.
+

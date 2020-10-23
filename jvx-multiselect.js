@@ -199,6 +199,14 @@ class JvxMultiselect extends LitElement {
                 type: String,
                 reflect: true
             },
+
+            /**
+             * The headers of the http request.
+             */
+            requestHeaders: {
+                type: Object,
+                reflect: true
+            },
         };
     }
 
@@ -234,6 +242,13 @@ class JvxMultiselect extends LitElement {
         this.labels = null;
         this.url = '';
         this.requestType = 'GET';
+        this.requestHeaders = {
+          Accept: 'application/json',
+          'Access-Control-Allow-Origin': '*', // cors
+          'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS', // cors
+          'Content-Type': 'application/json',
+          Authorization: window.sessionStorage.getItem('trusted')
+        }
     }
 
   updated(changedProperties) {
@@ -452,13 +467,6 @@ class JvxMultiselect extends LitElement {
      */
     _getList() {
         this.noData = false;
-        let headers = {
-            Accept: 'application/json',
-            'Access-Control-Allow-Origin': '*', // cors
-            'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS', // cors
-            'Content-Type': 'application/json',
-            Authorization: window.sessionStorage.getItem('trusted')
-        };
 
         let data = this.postParameters;
 
@@ -481,7 +489,7 @@ class JvxMultiselect extends LitElement {
                 url: this.url,
                 method: this.requestType,
                 mode: 'no-cors', // cors
-                headers,
+                headers: this.requestHeaders,
                 withCredentials: true,
                 credentials: 'same-origin', // cache: 'default',
                 data: data
