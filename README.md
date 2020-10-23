@@ -17,27 +17,27 @@ npm install jvx-multiselect
 
 
 ### Properties/Attributes
-| Name                    | Type                        | Default   | Description
-| ----------------------- | --------------------------- | ----------| ---------------------------------------------------------------------------
-| `options`               | `Array`                     | `[]`      | Array of the options in the form of Objects.
-| `itemText`              | `String`                    | `'text'`  | The name of the property of the option object that will be displayed as description of the options.
-| `itemValue`             | `String`                    | `'value'` | The name of the property of the option object that will be treated as value of the options.
-| `multi`                 | `Boolean`                   | `false`   | True if it's a multiselect.
-| `closeOnClick`          | `Boolean`                   | `false`   | True if the options list must be closed on each click outside the component.
-| `label`                 | `String`                    | `''`      | The label.
-| `searchLabel`           | `String`                    | `'search'`| The label of the search input.
-| `value`                 | `Array`                     | `[]`      | The current value of the selection.
-| `disabled`              | `Boolean`                   | `false`   | True to disable the select.
-| `clearable`             | `Boolean`                   | `false`   | True to enable the empty selection.
-| `searchInput`           | `Boolean`                   | `false`   | True to enable the search input for the options list.
-| `advancedSearch`        | `Boolean`                   | `false`   | True to enable the advanced search (searchInput must be true).
-| `useOnlyPostParameters` | `Boolean`                   | `false`   | True to ignore the default pagination.
-| `postParameters`        | `Object`                    | `null`    | The custom search value and pagination for the asynchronous selection.
-| `filter`                | `Object`                    | `null`    | The custom filter for the post call.
-| `labels`                | `Object`                    | `null`    | The dictionary to map the response.
-| `url`                   | `String`                    | `''`      | The url to get the options.
-| `requestType`           | <code>GET&#124;POST</code>  | `'GET'`   | The type of the http request.
-| `requestHeaders`        | `Object`                    | `{}`      | The headers of the http request.
+| Name                    | Type                            | Default   | Description
+| ----------------------- | ------------------------------- | ----------| ---------------------------------------------------------------------------
+| `options`               | `Array`                         | `[]`      | Array of the options in the form of Objects.
+| `itemText`              | `String`                        | `'text'`  | The name of the property of the option object that will be displayed as description of the options.
+| `itemValue`             | `String`                        | `'value'` | The name of the property of the option object that will be treated as value of the options.
+| `multi`                 | `Boolean`                       | `false`   | True if it's a multiselect.
+| `closeOnClick`          | `Boolean`                       | `false`   | True if the options list must be closed on each click outside the component.
+| `label`                 | `String`                        | `''`      | The label.
+| `searchLabel`           | `String`                        | `'search'`| The label of the search input.
+| `value`                 | `Array`                         | `[]`      | The current value of the selection.
+| `disabled`              | `Boolean`                       | `false`   | True to disable the select.
+| `clearable`             | `Boolean`                       | `false`   | True to enable the empty selection.
+| `searchInput`           | `Boolean`                       | `false`   | True to enable the search input for the options list.
+| `advancedSearch`        | `Boolean`                       | `false`   | True to enable the advanced search (searchInput must be true).
+| `useOnlyPostParameters` | `Boolean`                       | `false`   | True to ignore the default pagination.
+| `postParameters`        | `Object`                        | `null`    | The custom search value and pagination for the asynchronous selection.
+| `filter`                | `Object`                        | `null`    | The custom filter for the post call.
+| `labels`                | `Object`                        | `null`    | The dictionary to map the response.
+| `url`                   | `String`                        | `''`      | The url to get the options.
+| `requestType`           | <code>'GET'&#124;'POST'</code>  | `'GET'`   | The type of the HTTP request.
+| `requestHeaders`        | `Object`                        | `{...}`   | The headers of the HTTP request.
 
 
 ### Methods
@@ -67,7 +67,7 @@ npm install jvx-multiselect
 ### HTTP Request
 #### Request
 The HTTP request can be either a GET or a POST request.
-The user can set the type using the property `requestType` which is set to `GET` by default.
+The user can set the type using the property `requestType` which is set to `'GET'` by default.
 
 The HTTP request will be executed via [axios](https://github.com/axios/axios).
 
@@ -85,7 +85,7 @@ The default headers are:
 ```
 
 #### Response
-By now the response must contain an array of object, stored in the property `message` in the `response.data` object.
+By now the response must contain an array of objects, stored in the property `message` in the `response.data` object.
 
 The object template should be 
 ```javascript
@@ -125,7 +125,7 @@ the response object will be mapped like this
   selected: Boolean
 }
 ```
-The user can use the properties `itemText` and `itemValue` to prevent the need for the mapping (being in the example above `itemText = 'title'` and `itemValue = 'id'`.
+The user can use the properties `itemText` and `itemValue` to prevent the need for the mapping (being in the example above `itemText = 'title'` and `itemValue = 'id'`).
 
 #### Pagination
 The pagination is not supported yet, but will be in the next releases.

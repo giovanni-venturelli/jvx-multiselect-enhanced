@@ -109,6 +109,7 @@ class JvxMultiselect extends LitElement {
         </div>
         <!-- endregion -->
         <!--       region list-->
+        <div class="jvx-multiselect__list-container">
             <mwc-list multi="${this.multi}">
         ${repeat(this.selectableItems, item => item[this.itemValue], (item, index) => html`
              <mwc-list-item class="list-option"  .selected="${item.selected}" .activated="${item.selected}" value="${item[this.itemValue]}" @click="${(e) => {
@@ -120,6 +121,7 @@ class JvxMultiselect extends LitElement {
                       
                    </mwc-list-item>`)}
             </mwc-list>
+            </div>
         <!--      endregion -->
         </mwc-menu>
         <!-- endregion -->
@@ -195,7 +197,7 @@ class JvxMultiselect extends LitElement {
        * The type of the http request.
        */
       requestType: {
-        type: String,
+        type: 'GET' | 'POST',
         reflect: true
       },
 
@@ -561,6 +563,11 @@ class JvxMultiselect extends LitElement {
         }
     mwc-list{
 --mdc-theme-primary: var(--jvx-multiselect-primary, blue);
+
+}
+.jvx-multiselect__list-container{
+max-height: 300px;
+overflow: auto;
 }
         mwc-list-item{
         height: auto;
