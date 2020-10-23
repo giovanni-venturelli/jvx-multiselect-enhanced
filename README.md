@@ -2,10 +2,10 @@
 
 A web component that offers a multipurpose material multiselect which handle both synchronous and asynchronous selections.
 
-## Install jvx-material-input
+## Install jvx-multiselect
 
 ```
-npm install jvx-material-multiselect
+npm install jvx-multiselect
 ```
 
 ## API
