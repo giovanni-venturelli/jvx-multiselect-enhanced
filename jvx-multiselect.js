@@ -469,7 +469,7 @@ class JvxMultiselect extends LitElement {
   _getList() {
     this.noData = false;
 
-    let data = this.postParameters;
+    let data = this.postParameters || {};
 
     if (!this.useOnlyPostParameters) {
       Object.assign(data, {
@@ -499,7 +499,6 @@ class JvxMultiselect extends LitElement {
           const event = new CustomEvent('response', {
             detail: response.data
           });
-
           this.dispatchEvent(event);
           if (Array.isArray(response.data.message) && response.data.message.length > 0) {
             this._mapResponse(response.data.message);

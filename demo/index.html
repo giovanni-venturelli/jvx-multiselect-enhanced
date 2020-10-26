@@ -34,24 +34,23 @@
                     --jvx-multiselect-accent: #ffa200;
                 }
             </style>
-            <jvx-multiselect searchInput multi label="Seleziona" closeOnClick="true" options='[
-  {"text":"Passed Value 1","value":1},
-  {"text":"Passed Value 2","value":2},
-  {"text":"Passed Value 3","value":3}
-]' value='[
-  {"text":"Passed Value 2","value":2}
-]'
-            >
-                <div slot="option-item"><div class="option-item"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div></div></div>
-
-            </jvx-multiselect>
-<!--            <jvx-multiselect searchInput multi label="Seleziona" closeOnClick="true"-->
-<!--            url="https://jsonplaceholder.typicode.com/todos/1"-->
-<!--                             labels='{"id": "value", "title": "text"}'-->
+<!--            <jvx-multiselect searchInput multi label="Seleziona" closeOnClick="true" options='[-->
+<!--  {"text":"Passed Value 1","value":1},-->
+<!--  {"text":"Passed Value 2","value":2},-->
+<!--  {"text":"Passed Value 3","value":3}-->
+<!--]' value='[-->
+<!--  {"text":"Passed Value 2","value":2}-->
+<!--]'-->
 <!--            >-->
-<!--&lt;!&ndash;                <div slot="option-item"><div class="option-item"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div></div></div>&ndash;&gt;-->
+<!--                <div slot="option-item"><div class="option-item"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div></div></div>-->
 
 <!--            </jvx-multiselect>-->
+            <jvx-multiselect requestType="GET" searchInput multi label="Seleziona" closeOnClick="true"
+            url="http://localhost:3000/items"
+            >
+<!--                <div slot="option-item"><div class="option-item"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div></div></div>-->
+
+            </jvx-multiselect>
 
         </template>
     </demo-snippet>
