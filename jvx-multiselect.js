@@ -38,7 +38,7 @@ class JvxMultiselect extends LitElement {
       'selection-active': this.value !== null && this.value.length > 0
     })} >
         <label>${this.label}</label>
-        <div class="input-container__selected-container" @click="${this.toggleMenu}">
+        <div class="input-container__selected-container" @click="${this._toggleMenu}">
       <div class="input-container__selected"> 
      ${this.multi ? html`
      <span>
@@ -86,7 +86,7 @@ class JvxMultiselect extends LitElement {
         </div>
         <!-- endregion -->
         <!-- region menu -->
-        <mwc-menu fullwidth id="optionsMenu"  @closed="${this.onMenuToggled}" @opened="${this.onMenuToggled}">
+        <mwc-menu fullwidth id="optionsMenu"  @closed="${this._onMenuToggled}" @opened="${this._onMenuToggled}">
                     
           <!-- region search input -->
           <div class="optionsMenu__search-input-container">
@@ -101,7 +101,7 @@ class JvxMultiselect extends LitElement {
                           value="${this.searchValue}">
                           ${this.advancedSearch ? html`
                           <div slot="append">
-                             <mwc-icon-button id="advanced-search-button" icon="more_vert" @click="${this.showAdvancedSearch}">
+                             <mwc-icon-button id="advanced-search-button" icon="more_vert" @click="${this._showAdvancedSearch}">
                             </mwc-icon-button></div>` : html``}
             </jvx-material-input>` : html``}
             
@@ -255,8 +255,6 @@ class JvxMultiselect extends LitElement {
 
   updated(changedProperties) {
     super.updated(changedProperties);
-    console.log(changedProperties); // logs previous values
-    console.dir(this.selectableItems); // logs current value
     this._updateOptionSlot();
   }
 
@@ -267,11 +265,11 @@ class JvxMultiselect extends LitElement {
       const index = this.selectableItems.find((s) => s[this.itemValue] === item[this.itemValue]);
       if (index > -1) {
         this.selected = this.selectableItems[index].selected;
-        this.selectableItems[index] = this.cloneDeep(item);
+        this.selectableItems[index] = this._cloneDeep(item);
         this.selectableItems[index].selected = selected;
         this.selectableItems = [...this.selectableItems];
       } else {
-        let temp = this.cloneDeep(item);
+        let temp = this._cloneDeep(item);
         temp.selected = false;
         this.selectableItems = [...this.selectableItems, temp];
       }
@@ -279,8 +277,8 @@ class JvxMultiselect extends LitElement {
 
     // sets the default selected items
     for (const val of this.value) {
-      this.selected = [...this.selected, this.cloneDeep(val)];
-      this.updateSelectableItems();
+      this.selected = [...this.selected, this._cloneDeep(val)];
+      this._updateSelectableItems();
     }
 
     // slots[1].addEventListener('slotchange', function(e) {
@@ -297,21 +295,21 @@ class JvxMultiselect extends LitElement {
     });
   }
 
-  _handleScroll(e){
-    if(this.isLoading){
+  _handleScroll(e) {
+    if (this.isLoading) {
       e.preventDefault();
       e.stopPropagation();
-    }
-    else if(this.scrollingContent.scrollTop >=(this.scrollingContent.scrollHeight - this.scrollingContent.offsetHeight)){
+    } else if (this.scrollingContent.scrollTop >= (this.scrollingContent.scrollHeight - this.scrollingContent.offsetHeight)) {
       if (this.selectableItems.length < this.totalRows) {
         this._getList();
       }
     }
   }
 
-  get scrollingContent(){
+  get scrollingContent() {
     return this.shadowRoot.querySelector('.jvx-multiselect__list-container');
   }
+
   get optionsMenu() {
     return this.shadowRoot.querySelector('#optionsMenu');
   }
@@ -320,7 +318,7 @@ class JvxMultiselect extends LitElement {
     return this.shadowRoot.querySelector('#jvxList');
   }
 
-  toggleMenu() {
+  _toggleMenu() {
     if (!this.optionsMenu.open) {
       if (!this.options || this.options.length === 0) {
         this.pagination.page = 1;
@@ -334,7 +332,7 @@ class JvxMultiselect extends LitElement {
     }
   }
 
-  onMenuToggled() {
+  _onMenuToggled() {
     this.isOpen = this.optionsMenu.open;
     this.isFocused = this.optionsMenu.open;
   }
@@ -349,12 +347,12 @@ class JvxMultiselect extends LitElement {
       if (!this.multi) {
         this.selected.length = 0;
       }
-      this.selected = [...this.selected, this.cloneDeep(item)];
+      this.selected = [...this.selected, this._cloneDeep(item)];
     }
     if (this.closeOnClick && !this.multi) {
       this.optionsMenu.open = false;
     }
-    this.updateSelectableItems();
+    this._updateSelectableItems();
 
     const event = new CustomEvent('input', {
       detail: this.selected
@@ -366,12 +364,12 @@ class JvxMultiselect extends LitElement {
     this.dispatchEvent(event);
   }
 
-  showAdvancedSearch() {
+  _showAdvancedSearch() {
     const event = new CustomEvent('showAdvancedSearch');
     this.dispatchEvent(event);
   }
 
-  updateSelectableItems() {
+  _updateSelectableItems() {
     for (let i = 0; i < this.selectableItems.length; i++) {
       const item = this.selectableItems[i];
       item.selected = this.selected.findIndex((v) => v[this.itemValue] === item[this.itemValue]) > -1;
@@ -393,15 +391,15 @@ class JvxMultiselect extends LitElement {
     return this.selected.filter((v) => !this.multi);
   }
 
-  cloneDeep(el) {
+  _cloneDeep(el) {
     let ret = {};
     for (let key of Object.keys(el)) {
       if (!!el[key] && typeof el[key] === 'object') {
-        ret[key] = this.cloneDeep(el[key]);
+        ret[key] = this._cloneDeep(el[key]);
       } else if (Array.isArray(el[key])) {
         ret[key] = [];
         for (const val of el[key]) {
-          ret[key].push(this.cloneDeep(val));
+          ret[key].push(this._cloneDeep(val));
         }
       } else {
         ret[key] = el[key];
@@ -473,7 +471,7 @@ class JvxMultiselect extends LitElement {
     if (this.isOpen) {
       const timeout = setTimeout(() => {
         if (!this.isSearching) {
-          this.searchValue = e.detail? e.detail.value : '';
+          this.searchValue = e.detail ? e.detail.value : '';
           this.isSearching = true;
           this.pagination.page = 1;
           this.selectableItems = [];
@@ -515,8 +513,9 @@ class JvxMultiselect extends LitElement {
         headers: this.requestHeaders,
         withCredentials: true,
         credentials: 'same-origin', // cache: 'default',
-        data: data};
-      if(this.requestType === 'GET'){
+        data: data
+      };
+      if (this.requestType === 'GET') {
         axiosOptions.params = data;
       }
 
@@ -577,6 +576,14 @@ class JvxMultiselect extends LitElement {
   static get styles() {
 
     return css`
+      @keyframes lds-ring {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
         jvx-material-input{
         --jvx-material-input-primary:var(--jvx-multiselect-primary, blue);
         --jvx-material-input-accent:var(--jvx-multiselect-accent, green);
