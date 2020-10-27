@@ -300,6 +300,10 @@ class JvxMultiselect extends LitElement {
       e.preventDefault();
       e.stopPropagation();
     } else if (this.scrollingContent.scrollTop >= (this.scrollingContent.scrollHeight - this.scrollingContent.offsetHeight)) {
+
+      const event = new CustomEvent('scrollEnd');
+      this.dispatchEvent(event);
+
       if (this.selectableItems.length < this.totalRows) {
         this._getList();
       }

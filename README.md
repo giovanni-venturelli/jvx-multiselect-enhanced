@@ -52,6 +52,7 @@ npm install jvx-multiselect
 | `response`            |               | `Object`| Fired when the backend call returns successfully. The detail contains the response.
 | `invalid-jwt`         |               | `Object`| Fired when the backend call returns with an invalit jwt error. The detail contains the response.
 | `error`               |               | `String`| Fired when the backend call throws an exception. The detail contains the exception.
+| `scrollEnd`           |               | *None*  | Fired when the scrollbar in the options menu reaches the bottom.
 
 ### CSS Custom Properties
 *None*
@@ -60,9 +61,9 @@ npm install jvx-multiselect
 
 | Name                                              | Default               | Description
 | ------------------------------------------------- | --------------------- |------------
-| `--jvx-material-input-primary`                    | `blue`                | Color of the select bottom line when idle.
-| `--jvx-material-input-accent`                     | `green`               | Color of the underline ripple, the outline, and the caret  when active.
-| `--jvx-material-input-error`                      | `red`                 | Color of the underline ripple, the outline, and the caret when has errors.
+| `--jvx-multiselect-primary`                       | `blue`                | Color of the select bottom line when idle.
+| `--jvx-multiselect-accent`                        | `green`               | Color of the underline ripple, the outline, and the caret  when active.
+| `--jvx-multiselect-error`                         | `red`                 | Color of the underline ripple, the outline, and the caret when has errors.
 
 ### HTTP Request
 #### Request
@@ -76,11 +77,11 @@ The headers can be set in the property `requestHeaders`. By default the jvx-mult
 The default headers are:
 ```javascript
 {
-  Accept: 'application/json',
+  'Accept': 'application/json',
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
   'Content-Type': 'application/json',
-  Authorization: window.sessionStorage.getItem('trusted')
+  'Authorization': window.sessionStorage.getItem('trusted')
 }
 ```
 
@@ -126,8 +127,19 @@ the response object will be mapped like this
 }
 ```
 The user can use the properties `itemText` and `itemValue` to prevent the need for the mapping (being in the example above `itemText = 'title'` and `itemValue = 'id'`).
-
+#### Search
+When the user searches for a term the property `searchInput` is updated with the searched value. Its value is then copied in the property `name` of the object of the search parameters. 
 #### Pagination
-The pagination is not supported yet, but will be in the next releases.
-By now please always set `useOnlyPostParameters` to `true`.
+The property `pagination` is structured by default as follows:
+```javascript
+{
+  page: 1,
+  pageSize: 15
+}
+```
+Whenever the scrollbar in the menu reaches the bottom the property `page` is incremented by one and a further http request is called. When the user searches or closes the menu the property `page` is set again at `1`.
+The jvx-multiselect copies these values individually in the object of the search parameters.
+
+
+
 
