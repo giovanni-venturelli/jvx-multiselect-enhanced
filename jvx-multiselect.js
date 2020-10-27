@@ -93,12 +93,11 @@ class JvxMultiselect extends LitElement {
           ${this.searchInput ? html`<jvx-material-input
                             label="${this.searchLabel}"
                             type="text"
-                          @val-change="${this._onSearch}" 
+                          @input="${this._onSearch}" 
                           background-color="transparent"
                           class="ma-0 pa-0 jvx-multiselect-search-field"
                           flat
                           @click:append="$emit('showAdvancedSearch')"
-                          @click:clear="${this._onSearch}"
                           value="${this.searchValue}">
                           ${this.advancedSearch ? html`
                           <div slot="append">
@@ -470,10 +469,11 @@ class JvxMultiselect extends LitElement {
   }
 
 
-  _onSearch() {
+  _onSearch(e) {
     if (this.isOpen) {
       const timeout = setTimeout(() => {
         if (!this.isSearching) {
+          this.searchValue = e.detail? e.detail.value : '';
           this.isSearching = true;
           this.pagination.page = 1;
           this.selectableItems = [];
@@ -517,7 +517,7 @@ class JvxMultiselect extends LitElement {
         credentials: 'same-origin', // cache: 'default',
         data: data};
       if(this.requestType === 'GET'){
-        axiosOptions.params = {data};
+        axiosOptions.params = data;
       }
 
       axios(axiosOptions).then(response => {
