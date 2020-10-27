@@ -172,6 +172,7 @@ class JvxMultiselect extends LitElement {
       searchInput: {type: Boolean, reflect: true},
       advancedSearch: {type: Boolean, reflect: true},
       noData: {type: Boolean, reflect: true, attribute: false},
+      totalRows: {type: Number, reflect: true, attribute: false},
       useOnlyPostParameters: {type: Boolean, reflect: true},
       postParameters: {type: Object, reflect: true},
       filter: {type: Object, reflect: true},
@@ -262,7 +263,6 @@ class JvxMultiselect extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
-
     // sets the selectable items
     for (const item of this.options) {
       const index = this.selectableItems.find((s) => s[this.itemValue] === item[this.itemValue]);
@@ -290,6 +290,29 @@ class JvxMultiselect extends LitElement {
     // });
   }
 
+  async firstUpdated() {
+    // Give the browser a chance to paint
+    await new Promise((r) => setTimeout(r, 0));
+    this.scrollingContent.addEventListener('scroll', (e) => {
+      this._handleScroll(e);
+    });
+  }
+
+  _handleScroll(e){
+    if(this.isLoading){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    else if(this.scrollingContent.scrollTop >=(this.scrollingContent.scrollHeight - this.scrollingContent.offsetHeight)){
+      if (this.selectableItems.length < this.totalRows) {
+        this._getList();
+      }
+    }
+  }
+
+  get scrollingContent(){
+    return this.shadowRoot.querySelector('.jvx-multiselect__list-container');
+  }
   get optionsMenu() {
     return this.shadowRoot.querySelector('#optionsMenu');
   }
@@ -470,7 +493,6 @@ class JvxMultiselect extends LitElement {
     this.noData = false;
 
     let data = this.postParameters || {};
-
     if (!this.useOnlyPostParameters) {
       Object.assign(data, {
         name: this.searchValue,
@@ -486,15 +508,19 @@ class JvxMultiselect extends LitElement {
         reject();
       }
 
-      axios({
+      let axiosOptions = {
         url: this.url,
         method: this.requestType,
         mode: 'no-cors', // cors
         headers: this.requestHeaders,
         withCredentials: true,
         credentials: 'same-origin', // cache: 'default',
-        data: data
-      }).then(response => {
+        data: data};
+      if(this.requestType === 'GET'){
+        axiosOptions.params = {data};
+      }
+
+      axios(axiosOptions).then(response => {
         if (typeof response.data.invalidJwt === 'undefined') {
           const event = new CustomEvent('response', {
             detail: response.data
