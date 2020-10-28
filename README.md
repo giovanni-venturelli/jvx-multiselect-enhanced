@@ -65,7 +65,6 @@ npm install jvx-multiselect
 | `--jvx-multiselect-accent`                        | `green`               | Color of the underline ripple, the outline, and the caret  when active.
 | `--jvx-multiselect-error`                         | `red`                 | Color of the underline ripple, the outline, and the caret when has errors.
 | `--jvx-multiselect-background-color`              | `#fff`                | Color of the background of the menu.
-| `--jvx-multiselect-text-color`                    | `inherit`             | Color of the text of the menu.
 
 ### HTTP Request
 
