@@ -172,8 +172,8 @@ class JvxMultiselect extends LitElement {
       advancedSearch: {type: Boolean, reflect: true},
       noData: {type: Boolean, reflect: true, attribute: false},
       totalRows: {type: Number, reflect: true, attribute: false},
-      useOnlyPostParameters: {type: Boolean, reflect: true},
-      postParameters: {type: Object, reflect: true},
+      useOnlyHttpParameters: {type: Boolean, reflect: true},
+      httpParameters: {type: Object, reflect: true},
       filter: {type: Object, reflect: true},
       labels: {type: Object, reflect: true},
       url: {type: String, reflect: true},
@@ -239,8 +239,8 @@ class JvxMultiselect extends LitElement {
     this.itemValue = 'value';
     this.noData = false;
     this.filter = null;
-    this.postParameters = null;
-    this.useOnlyPostParameters = false;
+    this.httpParameters = null;
+    this.useOnlyHttpParameters = false;
     this.labels = null;
     this.url = '';
     this.requestType = 'GET';
@@ -494,10 +494,10 @@ class JvxMultiselect extends LitElement {
   _getList() {
     this.noData = false;
 
-    let data = this.postParameters || {};
-    if (!this.useOnlyPostParameters) {
+    let data = this.httpParameters || {};
+    if (!this.useOnlyHttpParameters) {
       Object.assign(data, {
-        name: this.searchValue,
+        search: this.searchValue,
         page: this.pagination.page,
         pageSize: this.pagination.pageSize,
         filter: !!this.filter && (typeof this.filter === 'object' || this.filter.length > 0) ? JSON.stringify(this.filter) : null
@@ -580,6 +580,10 @@ class JvxMultiselect extends LitElement {
   static get styles() {
 
     return css`
+    mwc-menu{
+    --mdc-theme-surface: var(--jvx-multiselect-background-color, #fff);
+    
+    }
       @keyframes lds-ring {
         0% {
           transform: rotate(0deg);
@@ -592,6 +596,7 @@ class JvxMultiselect extends LitElement {
         --jvx-material-input-primary:var(--jvx-multiselect-primary, blue);
         --jvx-material-input-accent:var(--jvx-multiselect-accent, green);
         --jvx-material-input-error:var(--jvx-multiselect-error, red);
+        --jvx-material-input-background: var(--jvx-multiselect-background-color, #fff)
         }
         paper-chip{
         --paper-chip-background-color:var(--jvx-multiselect-primary, blue);
@@ -708,9 +713,10 @@ position: relative;
      color: currentColor;
      }
       .input-container .input-container__remove-button-container{
-      height: 37px;
-      display: flex;
-      align-items: center;
+          height: 100%;
+          display: flex;
+          align-self: center;
+          align-items: center;
       }
       .input-container .input-container__remove-button{
       cursor: pointer;
@@ -732,10 +738,10 @@ position: relative;
      position: relative;
      left: 0;
      top: 0;
-     min-height: 32px;
+     min-height: 37px;
      }
  .input-container .input-container__selected-container .input-container__selected {
-     color: beige;
+     color: inherit;
      flex: 1 1 100%;
      left: 0;
      min-height: 100%;

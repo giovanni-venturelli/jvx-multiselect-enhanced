@@ -31,8 +31,8 @@ npm install jvx-multiselect
 | `clearable`             | `Boolean`                       | `false`   | True to enable the empty selection.
 | `searchInput`           | `Boolean`                       | `false`   | True to enable the search input for the options list.
 | `advancedSearch`        | `Boolean`                       | `false`   | True to enable the advanced search (searchInput must be true).
-| `useOnlyPostParameters` | `Boolean`                       | `false`   | True to ignore the default pagination.
-| `postParameters`        | `Object`                        | `null`    | The custom search value and pagination for the asynchronous selection.
+| `useOnlyHttpParameters` | `Boolean`                       | `false`   | True to ignore the default pagination.
+| `httpParameters`        | `Object`                        | `null`    | The custom search value and pagination for the asynchronous selection.
 | `filter`                | `Object`                        | `null`    | The custom filter for the post call.
 | `labels`                | `Object`                        | `null`    | The dictionary to map the response.
 | `url`                   | `String`                        | `''`      | The url to get the options.
@@ -64,17 +64,36 @@ npm install jvx-multiselect
 | `--jvx-multiselect-primary`                       | `blue`                | Color of the select bottom line when idle.
 | `--jvx-multiselect-accent`                        | `green`               | Color of the underline ripple, the outline, and the caret  when active.
 | `--jvx-multiselect-error`                         | `red`                 | Color of the underline ripple, the outline, and the caret when has errors.
+| `--jvx-multiselect-background-color`              | `#fff`                | Color of the background of the menu.
+| `--jvx-multiselect-text-color`                    | `inherit`             | Color of the text of the menu.
 
 ### HTTP Request
+
 #### Request
 The HTTP request can be either a GET or a POST request.
 The user can set the type using the property `requestType` which is set to `'GET'` by default.
 
 The HTTP request will be executed via [axios](https://github.com/axios/axios).
 
+#### httpParameters
+The parameters for the HTTP request are stored in the property `httpParameters`. 
+If the property `useOnlyHttpParamters` is `false`,  a new object will be created which will integrate `httpParameters` will be completed as follows:
+
+```javascript
+  Object.assign(this.httpParameters, {
+        search: this.searchValue,
+        page: this.pagination.page,
+        pageSize: this.pagination.pageSize,
+        filter: !!this.filter && (typeof this.filter === 'object' || this.filter.length > 0) ? JSON.stringify(this.filter) : null
+      });
+``` 
+
+This object will be passed in the property `data` or in the property `params` of the axios request depending on the HTTP request type.
+
 ##### Headers
 The headers can be set in the property `requestHeaders`. By default the jvx-multiselect uses the property `trusted` stored in the sessionStorage.
 The default headers are:
+
 ```javascript
 {
   'Accept': 'application/json',
@@ -128,7 +147,7 @@ the response object will be mapped like this
 ```
 The user can use the properties `itemText` and `itemValue` to prevent the need for the mapping (being in the example above `itemText = 'title'` and `itemValue = 'id'`).
 #### Search
-When the user searches for a term the property `searchInput` is updated with the searched value. Its value is then copied in the property `name` of the object of the search parameters. 
+When the user searches for a term, the property `searchInput` is updated with the searched value. Its value is then copied in the property `name` of the object of the search parameters. 
 #### Pagination
 The property `pagination` is structured by default as follows:
 ```javascript
@@ -137,7 +156,7 @@ The property `pagination` is structured by default as follows:
   pageSize: 15
 }
 ```
-Whenever the scrollbar in the menu reaches the bottom the property `page` is incremented by one and a further http request is called. When the user searches or closes the menu the property `page` is set again at `1`.
+Whenever the scrollbar in the menu reaches the bottom, the property `page` is incremented by one and a further http request is called. When the user searches or closes the menu the property `page` is set again at `1`.
 The jvx-multiselect copies these values individually in the object of the search parameters.
 
 
