@@ -77,10 +77,10 @@ The HTTP request will be executed via [axios](https://github.com/axios/axios).
 
 #### httpParameters
 The parameters for the HTTP request are stored in the property `httpParameters`. 
-If the property `useOnlyHttpParamters` is `false`,  a new object will be created which will integrate `httpParameters` will be completed as follows:
+If the property `useOnlyHttpParamters` is `false`,  a new object will be created which will integrate a copy of `httpParameters` will be completed as follows:
 
 ```javascript
-  Object.assign(this.httpParameters, {
+  Object.assign(httpParametersCopy, {
         search: this.searchValue,
         page: this.pagination.page,
         pageSize: this.pagination.pageSize,
