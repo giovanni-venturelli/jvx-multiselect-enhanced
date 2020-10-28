@@ -147,7 +147,7 @@ the response object will be mapped like this
 ```
 The user can use the properties `itemText` and `itemValue` to prevent the need for the mapping (being in the example above `itemText = 'title'` and `itemValue = 'id'`).
 #### Search
-When the user searches for a term, the property `searchInput` is updated with the searched value. Its value is then copied in the property `name` of the object of the search parameters. 
+When the user searches for a term, the property `searchInput` is updated with the searched value. Its value is then copied in the property `search` of the object of the search parameters. 
 #### Pagination
 The property `pagination` is structured by default as follows:
 ```javascript
