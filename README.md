@@ -19,6 +19,7 @@ npm install jvx-multiselect
 ### Properties/Attributes
 | Name                    | Type                            | Default   | Description
 | ----------------------- | ------------------------------- | ----------| ---------------------------------------------------------------------------
+| `flatRound`             | `Boolean`                       | `false`   | When true gives the jvx-multiselect a nice flat-rounded appearance.
 | `options`               | `Array`                         | `[]`      | Array of the options in the form of Objects.
 | `itemText`              | `String`                        | `'text'`  | The name of the property of the option object that will be displayed as description of the options.
 | `itemValue`             | `String`                        | `'value'` | The name of the property of the option object that will be treated as value of the options.

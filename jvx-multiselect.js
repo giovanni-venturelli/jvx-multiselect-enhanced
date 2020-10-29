@@ -733,11 +733,8 @@ position: relative;
      -ms-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
      -o-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     line-height: 2.3;
-     color: currentColor;
-     }
-     .jvx-multiselect.jvx-multiselect-flat-round .input-container label{
      line-height: 3;
+     color: currentColor;
      }
       .input-container .input-container__remove-button-container{
           height: 100%;
@@ -762,7 +759,7 @@ position: relative;
      
      .jvx-multiselect.jvx-multiselect-flat-round .input-container.selection-active label, 
      .jvx-multiselect.jvx-multiselect-flat-round .input-container.menu-is-open label{
-     transform: translateY(-28px) scale(0.75) translateX(-20px);
+     transform: translateY(-20px) scale(0.75) translateX(-20px);
      } 
  .input-container .input-container__selected-container {
      display: flex;
@@ -770,7 +767,10 @@ position: relative;
      position: relative;
      left: 0;
      top: 0;
-     min-height: 37px;
+     min-height: 37px;    
+     }
+     .jvx-multiselect:not(.jvx-multiselect-multi) .input-container .input-container__selected-container {
+     padding-top: 2px;
      }
  .input-container .input-container__selected-container .input-container__selected {
      color: inherit;
