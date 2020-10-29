@@ -25,6 +25,8 @@ class JvxMultiselect extends LitElement {
     return html`
       <div style="position:relative; display: inline;" class=${classMap({
       'jvx-multiselect': true,
+      'jvx-multiselect-multi': this.multi,
+      'jvx-multiselect-flat-round': this.flatRound,
       'jvx-multiselect-error': this.hasErrors,
       'jvx-multiselect-isFocused': this.isOpen || this.isFocused,
       'jvx-multiselect-isOpen': this.isOpen,
@@ -37,6 +39,7 @@ class JvxMultiselect extends LitElement {
       'menu-is-open': this.isOpen,
       'selection-active': this.value !== null && this.value.length > 0
     })} >
+        
         <label>${this.label}</label>
         <div class="input-container__selected-container" @click="${this._toggleMenu}">
       <div class="input-container__selected"> 
@@ -91,7 +94,8 @@ class JvxMultiselect extends LitElement {
           <!-- region search input -->
           <div class="optionsMenu__search-input-container">
           ${this.searchInput ? html`<jvx-material-input
-                            label="${this.searchLabel}"
+                            .flatRound="${this.flatRound}"
+                            placeholder="${this.searchLabel}"
                             type="text"
                           @input="${this._onSearch}" 
                           background-color="transparent"
@@ -208,6 +212,10 @@ class JvxMultiselect extends LitElement {
         type: Object,
         reflect: true
       },
+      flatRound: {
+        type: Boolean,
+        reflect: true
+      },
     };
   }
 
@@ -251,6 +259,7 @@ class JvxMultiselect extends LitElement {
       'Content-Type': 'application/json',
       Authorization: window.sessionStorage.getItem('trusted')
     }
+    this.flatRound = false;
   }
 
   updated(changedProperties) {
@@ -321,6 +330,7 @@ class JvxMultiselect extends LitElement {
   get jvxList() {
     return this.shadowRoot.querySelector('#jvxList');
   }
+
 
   _toggleMenu() {
     if (!this.optionsMenu.open) {
@@ -470,7 +480,6 @@ class JvxMultiselect extends LitElement {
     }
   }
 
-
   _onSearch(e) {
     if (this.isOpen) {
       const timeout = setTimeout(() => {
@@ -598,9 +607,16 @@ class JvxMultiselect extends LitElement {
         --jvx-material-input-error:var(--jvx-multiselect-error, red);
         --jvx-material-input-background: var(--jvx-multiselect-background-color, #fff)
         }
+        .jvx-multiselect-flat-round jvx-material-input{
+        --jvx-material-input-background: var(--jvx-multiselect-background-color, #D5D5D5)
+        }
         paper-chip{
         --paper-chip-background-color:var(--jvx-multiselect-primary, blue);
         --paper-chip-icon-text-color:#fff;
+        }
+        .jvx-multiselect.jvx-multiselect-multi.jvx-multiselect-flat-round paper-chip{
+          top: 3px;
+          position: relative;
         }
     mwc-list{
 --mdc-theme-primary: var(--jvx-multiselect-primary, blue);
@@ -652,26 +668,26 @@ position: relative;
  .jvx-multiselect.jvx-multiselect-isFocused {
 	 color: var(--jvx-multiselect-accent, green);
 }
- .jvx-multiselect.jvx-multiselect-isFocused .input-container::after {
+ .jvx-multiselect.jvx-multiselect-isFocused:not(.jvx-multiselect-flat-round) .input-container::after {
 	 transform: scaleX(1);
 }
  .jvx-multiselect.jvx-multiselect-isOpen .input-container__arrow {
 	 transform: rotate(180deg);
 }
- .jvx-multiselect.jvx-multiselect-has-state .input-container::before {
+ .jvx-multiselect.jvx-multiselect-has-state:not(.jvx-multiselect-flat-round) .input-container::before {
 	 border-color: currentColor;
 }
  .jvx-multiselect.jvx-multiselect-has-state .input-container label, .jvx-multiselect.jvx-multiselect-has-state .input-container .input-container__arrow > * {
 	 color: currentColor;
 }
- .jvx-multiselect:not(.jvx-multiselect-has-state) .input-container:hover::before {
+ .jvx-multiselect:not(.jvx-multiselect-has-state):not(.jvx-multiselect-flat-round) .input-container:hover::before {
 	 border-color: rgba(0, 0, 0, 0.87);
 }
  .jvx-multiselect.jvx-multiselect-disabled {
 	 pointer-events: none;
 	 color: rgba(0, 0, 0, 0.42);
 }
- .jvx-multiselect.jvx-multiselect-disabled .input-container::before {
+ .jvx-multiselect.jvx-multiselect-disabled:not(.jvx-multiselect-flat-round) .input-container::before {
 	 border-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.38) 0, rgba(0, 0, 0, 0.38) 2px, transparent 0, transparent 4px) 1 repeat;
 }
  
@@ -684,7 +700,7 @@ position: relative;
      -o-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
      transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
      }
- .input-container::before, .input-container::after {
+ .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::before, .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::after {
      bottom: -1px;
      content: "";
      left: 0;
@@ -692,15 +708,23 @@ position: relative;
      transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
      width: 100%;
      }
- .input-container::before {
+ .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::before {
      border-color: rgba(0, 0, 0, 0.42);
      border-style: solid;
      border-width: thin 0 0;
      }
- .input-container::after {
+ .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::after {
      transform: scaleX(0);
      border-style: solid;
      border-width: thin 0;
+     }
+ .jvx-multiselect.jvx-multiselect-flat-round .input-container{
+     background: var(--jvx-multiselect-input-background-color, #D5D5D5);
+     padding: 2.5px 0.75em;
+     height: auto;
+     min-height: 44px;
+     box-sizing: border-box;
+     border-radius: 4px;
      }
  .input-container label {
      position: absolute !important;
@@ -711,6 +735,9 @@ position: relative;
      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
      line-height: 2.3;
      color: currentColor;
+     }
+     .jvx-multiselect.jvx-multiselect-flat-round .input-container label{
+     line-height: 3;
      }
       .input-container .input-container__remove-button-container{
           height: 100%;
@@ -732,6 +759,11 @@ position: relative;
      line-height: 21px;
      color: var(--jvx-multiselect-accent, green);
      }
+     
+     .jvx-multiselect.jvx-multiselect-flat-round .input-container.selection-active label, 
+     .jvx-multiselect.jvx-multiselect-flat-round .input-container.menu-is-open label{
+     transform: translateY(-28px) scale(0.75) translateX(-20px);
+     } 
  .input-container .input-container__selected-container {
      display: flex;
      width: 100%;

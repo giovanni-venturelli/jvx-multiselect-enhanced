@@ -17,7 +17,7 @@
     "@material/mwc-menu": "^0.19.1",
     "@material/mwc-textfield": "^0.19.1",
     "@polymer/polymer": "^3.0.0",
-    "jvx-material-input": "^1.0.4",
+    "jvx-material-input": "^1.0.6",
     "lit-element": "^2.4.0",
     "paper-chip": "^3.0.0",
     "polymer-cli": "^1.9.11"
@@ -25,7 +25,7 @@
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/test-fixture": "^4.0.2",
-    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "@webcomponents/webcomponentsjs": "^2.5.0",
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
     "wct-mocha": "^1.0.1"
