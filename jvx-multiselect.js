@@ -166,7 +166,7 @@ class JvxMultiselect extends LitElement {
       isLoading: {type: Boolean, reflect: true, attribute: false},
       isOpen: {type: Boolean, reflect: true, attribute: false},
       isFocused: {type: Boolean, reflect: true, attribute: false},
-      hasErrors: {type: Boolean, reflect: true, attribute: false},
+      hasErrors: {type: Boolean, reflect: true},
       isSearching: {type: Boolean, reflect: true, attribute: false},
       searchValue: {type: String, reflect: true, attribute: false},
       pagination: {type: Object, reflect: true, attribute: false},

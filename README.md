@@ -19,27 +19,27 @@ npm install jvx-multiselect
 ### Properties/Attributes
 | Name                    | Type                            | Default   | Description
 | ----------------------- | ------------------------------- | ----------| ---------------------------------------------------------------------------
+| `advancedSearch`        | `Boolean`                       | `false`   | True to enable the advanced search (searchInput must be true).
+| `clearable`             | `Boolean`                       | `false`   | True to enable the empty selection.
+| `closeOnClick`          | `Boolean`                       | `false`   | True if the options list must be closed on each click outside the component.
+| `disabled`              | `Boolean`                       | `false`   | True to disable the select.
+| `filter`                | `Object`                        | `null`    | The custom filter for the post call.
 | `flatRound`             | `Boolean`                       | `false`   | When true gives the jvx-multiselect a nice flat-rounded appearance.
-| `options`               | `Array`                         | `[]`      | Array of the options in the form of Objects.
+| `hasErros`              | `Boolean`                       | `false`   | True to display the component in the "error" mode.
+| `httpParameters`        | `Object`                        | `null`    | The custom search value and pagination for the asynchronous selection.
 | `itemText`              | `String`                        | `'text'`  | The name of the property of the option object that will be displayed as description of the options.
 | `itemValue`             | `String`                        | `'value'` | The name of the property of the option object that will be treated as value of the options.
-| `multi`                 | `Boolean`                       | `false`   | True if it's a multiselect.
-| `closeOnClick`          | `Boolean`                       | `false`   | True if the options list must be closed on each click outside the component.
 | `label`                 | `String`                        | `''`      | The label.
-| `searchLabel`           | `String`                        | `'search'`| The label of the search input.
-| `value`                 | `Array`                         | `[]`      | The current value of the selection.
-| `disabled`              | `Boolean`                       | `false`   | True to disable the select.
-| `clearable`             | `Boolean`                       | `false`   | True to enable the empty selection.
-| `searchInput`           | `Boolean`                       | `false`   | True to enable the search input for the options list.
-| `advancedSearch`        | `Boolean`                       | `false`   | True to enable the advanced search (searchInput must be true).
-| `useOnlyHttpParameters` | `Boolean`                       | `false`   | True to ignore the default pagination.
-| `httpParameters`        | `Object`                        | `null`    | The custom search value and pagination for the asynchronous selection.
-| `filter`                | `Object`                        | `null`    | The custom filter for the post call.
 | `labels`                | `Object`                        | `null`    | The dictionary to map the response.
-| `url`                   | `String`                        | `''`      | The url to get the options.
-| `requestType`           | <code>'GET'&#124;'POST'</code>  | `'GET'`   | The type of the HTTP request.
+| `multi`                 | `Boolean`                       | `false`   | True if it's a multiselect.
+| `options`               | `Array`                         | `[]`      | Array of the options in the form of Objects.
 | `requestHeaders`        | `Object`                        | `{...}`   | The headers of the HTTP request.
-
+| `requestType`           | <code>'GET'&#124;'POST'</code>  | `'GET'`   | The type of the HTTP request.
+| `searchInput`           | `Boolean`                       | `false`   | True to enable the search input for the options list.
+| `searchLabel`           | `String`                        | `'search'`| The label of the search input.
+| `useOnlyHttpParameters` | `Boolean`                       | `false`   | True to ignore the default pagination.
+| `url`                   | `String`                        | `''`      | The url to get the options.
+| `value`                 | `Array`                         | `[]`      | The current value of the selection.
 
 ### Methods
 *None*
