@@ -1,6 +1,6 @@
 # \<jvx-multiselect\>
 
-A web component that offers a multipurpose material multiselect which handle both synchronous and asynchronous selections.
+A web component that offers a multipurpose material multiselect which handles both synchronous and asynchronous selections.
 
 ## Install jvx-multiselect
 
