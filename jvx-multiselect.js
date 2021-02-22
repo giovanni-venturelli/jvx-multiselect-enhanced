@@ -137,6 +137,7 @@ class JvxMultiselect extends LitElement {
                 <slot @slotchange="${this._updateOptionSlot()}" name="option-item"></slot>
             </div>
         </div>
+          <slot @slotchange="${this._updateOptionsSlot()}" name="options"></slot>
       </div>
     `;
   }
@@ -290,6 +291,17 @@ class JvxMultiselect extends LitElement {
       this._updateSelectableItems();
     }
 
+
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        //Detect <img> insertion
+        if (mutation.addedNodes.length)
+          console.info('Node added: ', mutation.addedNodes[0])
+      })
+    })
+
+    observer.observe(this, { childList: true })
+
     // slots[1].addEventListener('slotchange', function(e) {
     //   let nodes = slots[1].assignedNodes();
     //   console.log('Element in Slot "' + slots[1].name + '" changed to "' + nodes[0].outerHTML + '".');
@@ -439,6 +451,38 @@ class JvxMultiselect extends LitElement {
           }
         }
       }
+    }
+  }
+  _updateOptionsSlot() {
+    let slot = this.shadowRoot.querySelector('slot[name="options"]');
+    if (!!slot && slot.assignedNodes().length > 0) {
+
+      console.log('slot!');
+      console.log(slot.assignedNodes())
+      const nodes = slot.assignedNodes();
+      for(let n of nodes){
+        for(let child of n.children) {
+          if(this.selectableItems.findIndex(o=>o[this.itemValue] === child.getAttribute('value'))===-1){
+            let newOption = {};
+            newOption[this.itemValue] = child.getAttribute('value');
+            newOption[this.itemText] = child.getAttribute('text');
+            newOption.selected = this.value.findIndex(m => m[this.itemValue] === newOption[this.itemValue]) !== -1;
+            this.selectableItems.push(newOption);
+          }
+        }
+      }
+      console.log(nodes);
+      // for (const item of this.selectableItems) {
+      //   const optionTemplate = slot.assignedNodes()[0];
+      //   const nodes = this.shadowRoot.querySelectorAll('.list-option-content');
+      //   for (const option of nodes) {
+      //     if (option.dataset.value === item[this.itemValue].toString()) {
+      //       option.innerHTML = '';
+      //       option.appendChild(optionTemplate.cloneNode(true).childNodes[0]);
+      //       this._replaceOptionProperties(option.childNodes, item)
+      //     }
+      //   }
+      // }
     }
   }
 
