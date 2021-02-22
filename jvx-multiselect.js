@@ -1,16 +1,16 @@
-import {LitElement, html, css} from 'lit-element';
-import {classMap} from 'lit-html/directives/class-map';
-import {repeat} from 'lit-html/directives/repeat';
+import {axios} from '@bundled-es-modules/axios';
 import '@material/mwc-button';
-import '@material/mwc-menu';
 import '@material/mwc-icon';
 import '@material/mwc-icon-button';
 import '@material/mwc-list/mwc-list-item.js';
 import '@material/mwc-list/mwc-list.js';
+import '@material/mwc-menu';
 import '@material/mwc-textfield';
-import 'paper-chip';
 import 'jvx-material-input';
-import {axios} from '@bundled-es-modules/axios';
+import {css, html, LitElement} from 'lit-element';
+import {classMap} from 'lit-html/directives/class-map';
+import {repeat} from 'lit-html/directives/repeat';
+import 'paper-chip';
 
 /**
  * `jvx-multiselect`
@@ -23,122 +23,128 @@ import {axios} from '@bundled-es-modules/axios';
 class JvxMultiselect extends LitElement {
   render() {
     return html`
-      <div style="position:relative; display: inline;" class=${classMap({
-      'jvx-multiselect': true,
-      'jvx-multiselect-multi': this.multi,
-      'jvx-multiselect-flat-round': this.flatRound,
-      'jvx-multiselect-error': this.hasErrors,
-      'jvx-multiselect-isFocused': this.isOpen || this.isFocused,
-      'jvx-multiselect-isOpen': this.isOpen,
-      'jvx-multiselect-has-state': this.isOpen || this.hasErrors === true || this.disabled,
-      'jvx-multiselect-disabled': this.disabled
-    })}>
-      <!-- region input container -->
-        <div id="multiInputField" class=${classMap({
-      'input-container': true,
-      'menu-is-open': this.isOpen,
-      'selection-active': this.value !== null && this.value.length > 0
-    })} >
-        
-        <label>${this.label}</label>
-        <div class="input-container__selected-container" @click="${this._toggleMenu}">
-      <div class="input-container__selected"> 
-     ${this.multi ? html`
-     <span>
+        <div style="position:relative; display: inline;" class=${classMap({
+            'jvx-multiselect': true,
+            'jvx-multiselect-multi': this.multi,
+            'jvx-multiselect-flat-round': this.flatRound,
+            'jvx-multiselect-error': this.hasErrors,
+            'jvx-multiselect-isFocused': this.isOpen || this.isFocused,
+            'jvx-multiselect-isOpen': this.isOpen,
+            'jvx-multiselect-has-state': this.isOpen || this.hasErrors === true || this.disabled,
+            'jvx-multiselect-disabled': this.disabled
+        })}>
+            <!-- region input container -->
+            <div id="multiInputField" class=${classMap({
+                'input-container': true,
+                'menu-is-open': this.isOpen,
+                'selection-active': this.value !== null && this.value.length > 0
+            })}>
+
+                <label>${this.label}</label>
+                <div class="input-container__selected-container" @click="${this._toggleMenu}">
+                    <div class="input-container__selected">
+                        ${this.multi ? html`
+                                    <span>
        ${repeat(this.value, item => item[this.itemValue], (item, index) => html`
-          <paper-chip noHover="true" label="${item[this.itemText]}" closable 
-          @chip-removed="${() => {
-        this.select(item)
-      }}">
-          </paper-chip>`)}
+           <paper-chip noHover="true" label="${item[this.itemText]}" closable
+                       @chip-removed="${() => {
+                           this.select(item)
+                       }}">
+           </paper-chip>`)}
      </span>`
-      : html`
-        ${repeat(this.value, item => item[this.itemValue], (item, index) => html`
-  <div> ${item[this.itemText]}</div>     
-        `)}
-      `}
-      </div>  
-        <!-- region remove button -->  
-        ${this.value.length > 0 && this.multi === false && this.clearable === true ? html`
-        <div class="input-container__remove-button-container">
-          <mwc-icon @click="${(e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      this.select(this.value[0])
-    }}" class="input-container__remove-button">
-        close
-        </mwc-icon></div>` : html``
-    }
-        <!--- endregion -->
-        <!-- region arrow icon -->
-        <div class="input-container__arrow">
-                  ${!this.isLoading ? html`
-                  <mwc-icon>arrow_drop_down
-                  </mwc-icon>
-                  ` : html`
-                  <div class="lds-ring">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                  `}               
+                                : html`
+                                    ${repeat(this.value, item => item[this.itemValue], (item, index) => html`
+                                        <div> ${item[this.itemText]}</div>
+                                    `)}
+                                `}
+                    </div>
+                    <!-- region remove button -->
+                    ${this.value.length > 0 && this.multi === false && this.clearable === true ? html`
+                        <div class="input-container__remove-button-container">
+                            <mwc-icon @click="${(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                this.select(this.value[0])
+                            }}" class="input-container__remove-button">
+                                close
+                            </mwc-icon>
+                        </div>` : html``
+                    }
+                    <!--- endregion -->
+                    <!-- region arrow icon -->
+                    <div class="input-container__arrow">
+                        ${!this.isLoading ? html`
+                            <mwc-icon>arrow_drop_down
+                            </mwc-icon>
+                        ` : html`
+                            <div class="lds-ring">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        `}
+                    </div>
+                    <!-- endregion -->
                 </div>
-        <!-- endregion -->
+            </div>
+            <!-- endregion -->
+            <!-- region menu -->
+            <mwc-menu fullwidth id="optionsMenu" @closed="${this._onMenuToggled}" @opened="${this._onMenuToggled}">
+
+                <!-- region search input -->
+                <div class="optionsMenu__search-input-container">
+                    ${this.searchInput ? html`
+                        <jvx-material-input
+                                .flatRound="${this.flatRound}"
+                                placeholder="${this.searchLabel}"
+                                type="text"
+                                @input="${this._onSearch}"
+                                background-color="transparent"
+                                class="ma-0 pa-0 jvx-multiselect-search-field"
+                                flat
+                                @click:append="$emit('showAdvancedSearch')"
+                                value="${this.searchValue}">
+                            ${this.advancedSearch ? html`
+                                <div slot="append">
+                                    <mwc-icon-button id="advanced-search-button" icon="more_vert"
+                                                     @click="${this._showAdvancedSearch}">
+                                    </mwc-icon-button>
+                                </div>` : html``}
+                        </jvx-material-input>` : html``}
+
                 </div>
+                <!-- endregion -->
+                <!--       region list-->
+                <div class="jvx-multiselect__list-container">
+                    <mwc-list multi="${this.multi}">
+                        ${repeat(this.selectableItems, item => item[this.itemValue], (item, index) => html`
+                            <mwc-list-item class="list-option" .selected="${item.selected}"
+                                           .activated="${item.selected}" value="${item[this.itemValue]}"
+                                           @click="${(e) => {
+                                               this.select(item)
+                                           }}">
+                                <div class="list-option-content" data-value="${item[this.itemValue]}">
+                                    ${item[this.itemText]}
+                                </div>
+
+                            </mwc-list-item>`)}
+                    </mwc-list>
+                </div>
+                <!--      endregion -->
+            </mwc-menu>
+            <!-- endregion -->
         </div>
-        <!-- endregion -->
-        <!-- region menu -->
-        <mwc-menu fullwidth id="optionsMenu"  @closed="${this._onMenuToggled}" @opened="${this._onMenuToggled}">
-                    
-          <!-- region search input -->
-          <div class="optionsMenu__search-input-container">
-          ${this.searchInput ? html`<jvx-material-input
-                            .flatRound="${this.flatRound}"
-                            placeholder="${this.searchLabel}"
-                            type="text"
-                          @input="${this._onSearch}" 
-                          background-color="transparent"
-                          class="ma-0 pa-0 jvx-multiselect-search-field"
-                          flat
-                          @click:append="$emit('showAdvancedSearch')"
-                          value="${this.searchValue}">
-                          ${this.advancedSearch ? html`
-                          <div slot="append">
-                             <mwc-icon-button id="advanced-search-button" icon="more_vert" @click="${this._showAdvancedSearch}">
-                            </mwc-icon-button></div>` : html``}
-            </jvx-material-input>` : html``}
-            
         </div>
-        <!-- endregion -->
-        <!--       region list-->
-        <div class="jvx-multiselect__list-container">
-            <mwc-list multi="${this.multi}">
-        ${repeat(this.selectableItems, item => item[this.itemValue], (item, index) => html`
-             <mwc-list-item class="list-option"  .selected="${item.selected}" .activated="${item.selected}" value="${item[this.itemValue]}" @click="${(e) => {
-      this.select(item)
-    }}">
-             <div class="list-option-content" data-value="${item[this.itemValue]}">
-      ${item[this.itemText]}
-      </div>
-                      
-                   </mwc-list-item>`)}
-            </mwc-list>
+
+        <div style="display: none">
+            <div id="option-item-template">
+                <div>
+                    <slot @slotchange="${this._updateOptionSlot()}" name="option-item"></slot>
+                </div>
             </div>
-        <!--      endregion -->
-        </mwc-menu>
-        <!-- endregion -->
+            <slot @slotchange="${this._updateOptionsSlot()}" name="options"></slot>
         </div>
-      </div>
-      
-      <div style="display: none">
-        <div id="option-item-template">
-            <div>
-                <slot @slotchange="${this._updateOptionSlot()}" name="option-item"></slot>
-            </div>
-        </div>
-          <slot @slotchange="${this._updateOptionsSlot()}" name="options"></slot>
-      </div>
     `;
   }
 
@@ -265,7 +271,7 @@ class JvxMultiselect extends LitElement {
 
   updated(changedProperties) {
     super.updated(changedProperties);
-    this._updateOptionSlot();
+    this._updateOptionSlot(changedProperties);
   }
 
   connectedCallback() {
@@ -292,15 +298,16 @@ class JvxMultiselect extends LitElement {
     }
 
 
-    var observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
         //Detect <img> insertion
-        if (mutation.addedNodes.length)
+        if (mutation.addedNodes.length) {
           console.info('Node added: ', mutation.addedNodes[0])
+        }
       })
     })
 
-    observer.observe(this, { childList: true })
+    observer.observe(this, {childList: true})
 
     // slots[1].addEventListener('slotchange', function(e) {
     //   let nodes = slots[1].assignedNodes();
@@ -437,12 +444,14 @@ class JvxMultiselect extends LitElement {
   onClose(item) {
   }
 
-  _updateOptionSlot() {
+  _updateOptionSlot(e) {
     let slot = this.shadowRoot.querySelector('slot[name="option-item"]');
     if (!!slot && slot.assignedNodes().length > 0) {
+
       for (const item of this.selectableItems) {
         const optionTemplate = slot.assignedNodes()[0];
         const nodes = this.shadowRoot.querySelectorAll('.list-option-content');
+
         for (const option of nodes) {
           if (option.dataset.value === item[this.itemValue].toString()) {
             option.innerHTML = '';
@@ -453,16 +462,14 @@ class JvxMultiselect extends LitElement {
       }
     }
   }
+
   _updateOptionsSlot() {
     let slot = this.shadowRoot.querySelector('slot[name="options"]');
     if (!!slot && slot.assignedNodes().length > 0) {
-
-      console.log('slot!');
-      console.log(slot.assignedNodes())
       const nodes = slot.assignedNodes();
-      for(let n of nodes){
-        for(let child of n.children) {
-          if(this.selectableItems.findIndex(o=>o[this.itemValue] === child.getAttribute('value'))===-1){
+      for (let n of nodes) {
+        for (let child of n.children) {
+          if (this.selectableItems.findIndex(o => o[this.itemValue] === child.getAttribute('value')) === -1) {
             let newOption = {};
             newOption[this.itemValue] = child.getAttribute('value');
             newOption[this.itemText] = child.getAttribute('text');
@@ -471,7 +478,6 @@ class JvxMultiselect extends LitElement {
           }
         }
       }
-      console.log(nodes);
       // for (const item of this.selectableItems) {
       //   const optionTemplate = slot.assignedNodes()[0];
       //   const nodes = this.shadowRoot.querySelectorAll('.list-option-content');
@@ -515,6 +521,10 @@ class JvxMultiselect extends LitElement {
       if (node.parentNode.dataset.originalText.includes('[[option.' + key + ']]')) {
         node.parentNode.setAttribute('data-item-value', item[this.itemValue]);
         node.data = node.parentNode.dataset.originalText.replace('[[option.' + key + ']]', item[key]);
+      }
+      for (const akey of Object.keys(node.parentNode.attributes)) {
+        node.parentNode.setAttribute(node.parentNode.attributes[akey].name, node.parentNode.getAttribute(node.parentNode.attributes[akey].name).replace('[[option.' + key + ']]', item[key]));
+
       }
     }
     if (node.nodeType === 1 && node.nodeName !== "SCRIPT") {
@@ -633,10 +643,11 @@ class JvxMultiselect extends LitElement {
   static get styles() {
 
     return css`
-    mwc-menu{
-    --mdc-theme-surface: var(--jvx-multiselect-background-color, #fff);
-    
-    }
+      mwc-menu {
+        --mdc-theme-surface: var(--jvx-multiselect-background-color, #fff);
+
+      }
+
       @keyframes lds-ring {
         0% {
           transform: rotate(0deg);
@@ -645,227 +656,264 @@ class JvxMultiselect extends LitElement {
           transform: rotate(360deg);
         }
       }
-        jvx-material-input{
-        --jvx-material-input-primary:var(--jvx-multiselect-primary, blue);
-        --jvx-material-input-accent:var(--jvx-multiselect-accent, green);
-        --jvx-material-input-error:var(--jvx-multiselect-error, red);
-        --jvx-material-input-background: var(--jvx-multiselect-background-color, #fff)
-        }
-        .jvx-multiselect-flat-round jvx-material-input{
-        --jvx-material-input-background: var(--jvx-multiselect-background-color, #D5D5D5)
-        }
-        paper-chip{
-        --paper-chip-background-color:var(--jvx-multiselect-primary, blue);
-        --paper-chip-icon-text-color:#fff;
-        }
-        .jvx-multiselect.jvx-multiselect-multi.jvx-multiselect-flat-round paper-chip{
-          top: 3px;
-          position: relative;
-        }
-    mwc-list{
---mdc-theme-primary: var(--jvx-multiselect-primary, blue);
 
-}
-.jvx-multiselect__list-container{
-max-height: 300px;
-overflow: auto;
-}
-        mwc-list-item{
+      jvx-material-input {
+        --jvx-material-input-primary: var(--jvx-multiselect-primary, blue);
+        --jvx-material-input-accent: var(--jvx-multiselect-accent, green);
+        --jvx-material-input-error: var(--jvx-multiselect-error, red);
+        --jvx-material-input-background: var(--jvx-multiselect-background-color, #fff)
+      }
+
+      .jvx-multiselect-flat-round jvx-material-input {
+        --jvx-material-input-background: var(--jvx-multiselect-background-color, #D5D5D5)
+      }
+
+      paper-chip {
+        --paper-chip-background-color: var(--jvx-multiselect-primary, blue);
+        --paper-chip-icon-text-color: #fff;
+      }
+
+      .jvx-multiselect.jvx-multiselect-multi.jvx-multiselect-flat-round paper-chip {
+        top: 3px;
+        position: relative;
+      }
+
+      mwc-list {
+        --mdc-theme-primary: var(--jvx-multiselect-primary, blue);
+
+      }
+
+      .jvx-multiselect__list-container {
+        max-height: 300px;
+        overflow: auto;
+      }
+
+      mwc-list-item {
         height: auto;
         min-height: 40px;
         padding: 10px 20px;
-        } 
- #optionsMenu {
-display: block;
-position: relative;
-     --mdc-menu-min-width: 100px;
-     --mdc-menu-width: 100%;
-     --mdc-menu-item-height: 30px;
+      }
 
-     /* inherits the styles of mwc-list internally */
-     --mdc-theme-primary: blue;
-     --mdc-list-vertical-padding: 0px;
-     --mdc-list-side-padding: 30px;
-     }
-     
-     #optionsMenu .optionsMenu__search-input-container{
-     width: 100%;
-     display: flex;
-     justify-content: center;
-     padding: 5px 20px 0;
-     box-sizing: border-box;
-     }
-     #optionsMenu .optionsMenu__search-input-container mwc-icon-button {
+      #optionsMenu {
+        display: block;
+        position: relative;
+        --mdc-menu-min-width: 100px;
+        --mdc-menu-width: 100%;
+        --mdc-menu-item-height: 30px;
+
+        /* inherits the styles of mwc-list internally */
+        --mdc-theme-primary: blue;
+        --mdc-list-vertical-padding: 0px;
+        --mdc-list-side-padding: 30px;
+      }
+
+      #optionsMenu .optionsMenu__search-input-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 5px 20px 0;
+        box-sizing: border-box;
+      }
+
+      #optionsMenu .optionsMenu__search-input-container mwc-icon-button {
         --mdc-icon-size: 16px;
         --mdc-icon-button-size: 24px;
       }
-     
-.jvx-multiselect {
-	 padding-top: 12px;
-	 margin-top: 4px;
-	 position: relative;
-	 color: var(--jvx-multiselect-primary, black);
-}
- .jvx-multiselect.jvx-multiselect-error {
-	 color: var(--jvx-multiselect-warn, red);
-}
- .jvx-multiselect.jvx-multiselect-isFocused {
-	 color: var(--jvx-multiselect-accent, green);
-}
- .jvx-multiselect.jvx-multiselect-isFocused:not(.jvx-multiselect-flat-round) .input-container::after {
-	 transform: scaleX(1);
-}
- .jvx-multiselect.jvx-multiselect-isOpen .input-container__arrow {
-	 transform: rotate(180deg);
-}
- .jvx-multiselect.jvx-multiselect-has-state:not(.jvx-multiselect-flat-round) .input-container::before {
-	 border-color: currentColor;
-}
- .jvx-multiselect.jvx-multiselect-has-state .input-container label, .jvx-multiselect.jvx-multiselect-has-state .input-container .input-container__arrow > * {
-	 color: currentColor;
-}
- .jvx-multiselect:not(.jvx-multiselect-has-state):not(.jvx-multiselect-flat-round) .input-container:hover::before {
-	 border-color: rgba(0, 0, 0, 0.87);
-}
- .jvx-multiselect.jvx-multiselect-disabled {
-	 pointer-events: none;
-	 color: rgba(0, 0, 0, 0.42);
-}
- .jvx-multiselect.jvx-multiselect-disabled:not(.jvx-multiselect-flat-round) .input-container::before {
-	 border-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.38) 0, rgba(0, 0, 0, 0.38) 2px, transparent 0, transparent 4px) 1 repeat;
-}
- 
- .input-container {
-     min-height: 37px;
-     position: relative;
-     -webkit-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     -moz-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     -ms-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     -o-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     }
- .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::before, .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::after {
-     bottom: -1px;
-     content: "";
-     left: 0;
-     position: absolute;
-     transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     width: 100%;
-     }
- .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::before {
-     border-color: rgba(0, 0, 0, 0.42);
-     border-style: solid;
-     border-width: thin 0 0;
-     }
- .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::after {
-     transform: scaleX(0);
-     border-style: solid;
-     border-width: thin 0;
-     }
- .jvx-multiselect.jvx-multiselect-flat-round .input-container{
-     background: var(--jvx-multiselect-input-background-color, #D5D5D5);
-     padding: 2.5px 0.75em;
-     height: auto;
-     min-height: 44px;
-     box-sizing: border-box;
-     border-radius: 4px;
-     }
- .input-container label {
-     position: absolute !important;
-     -webkit-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     -moz-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     -ms-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     -o-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     line-height: 3;
-     color: currentColor;
-     }
-      .input-container .input-container__remove-button-container{
-          height: 100%;
-          display: flex;
-          align-self: center;
-          align-items: center;
-      }
-      .input-container .input-container__remove-button{
-      cursor: pointer;
-      font-size: 15px;
-      }
- .input-container .input-container__arrow > * {
-     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     }
- .input-container.selection-active label, .input-container.menu-is-open label {
-     transform: translateY(-18px) scale(0.75) translateX(-6px);
-     transform-origin: 20px;
-     display: inline;
-     line-height: 21px;
-     color: var(--jvx-multiselect-accent, green);
-     }
-     
-     .jvx-multiselect.jvx-multiselect-flat-round .input-container.selection-active label, 
-     .jvx-multiselect.jvx-multiselect-flat-round .input-container.menu-is-open label{
-     transform: translateY(-20px) scale(0.75) translateX(-20px);
-     } 
- .input-container .input-container__selected-container {
-     display: flex;
-     width: 100%;
-     position: relative;
-     left: 0;
-     top: 0;
-     min-height: 37px;    
-     }
-     .jvx-multiselect:not(.jvx-multiselect-multi) .input-container .input-container__selected-container {
-     padding-top: 2px;
-     }
- .input-container .input-container__selected-container .input-container__selected {
-     color: inherit;
-     flex: 1 1 100%;
-     left: 0;
-     min-height: 100%;
-     display: flex;
-     align-items: center;
-     max-height: 100%;
-     flex-wrap: wrap;
-     }
- .input-container .input-container__selected-container .input-container__selected .input__item {
-     opacity: 1;
-     }
- .input-container .input-container__selected-container .input-container__arrow {
-     width: 24px;
-     height: 100%;
-     display: flex;
-     align-self: center;
-     align-items: center;
-     transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-     }
- .input-container .input-container__selected-container .input-container__arrow .lds-ring {
-     display: inline-block;
-     position: relative;
-     width: 24px;
-     height: 24px;
-     }
- .input-container .input-container__selected-container .input-container__arrow .lds-ring div {
-     box-sizing: border-box;
-     display: block;
-     position: absolute;
-     width: 16px;
-     height: 16px;
-     margin: 4px;
-     border: 2px solid var(--jvx-multiselect-accent, green);
-     border-radius: 50%;
-     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-     border-color: var(--jvx-multiselect-accent, green) transparent transparent transparent;
-     }
- .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(1) {
-     animation-delay: -0.45s;
-     }
- .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(2) {
-     animation-delay: -0.3s;
-     }
- .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(3) {
-     animation-delay: -0.15s;
-     }
 
-  `;
+      .jvx-multiselect {
+        padding-top: 12px;
+        margin-top: 4px;
+        position: relative;
+        color: var(--jvx-multiselect-primary, black);
+      }
+
+      .jvx-multiselect.jvx-multiselect-error {
+        color: var(--jvx-multiselect-warn, red);
+      }
+
+      .jvx-multiselect.jvx-multiselect-isFocused {
+        color: var(--jvx-multiselect-accent, green);
+      }
+
+      .jvx-multiselect.jvx-multiselect-isFocused:not(.jvx-multiselect-flat-round) .input-container::after {
+        transform: scaleX(1);
+      }
+
+      .jvx-multiselect.jvx-multiselect-isOpen .input-container__arrow {
+        transform: rotate(180deg);
+      }
+
+      .jvx-multiselect.jvx-multiselect-has-state:not(.jvx-multiselect-flat-round) .input-container::before {
+        border-color: currentColor;
+      }
+
+      .jvx-multiselect.jvx-multiselect-has-state .input-container label, .jvx-multiselect.jvx-multiselect-has-state .input-container .input-container__arrow > * {
+        color: currentColor;
+      }
+
+      .jvx-multiselect:not(.jvx-multiselect-has-state):not(.jvx-multiselect-flat-round) .input-container:hover::before {
+        border-color: rgba(0, 0, 0, 0.87);
+      }
+
+      .jvx-multiselect.jvx-multiselect-disabled {
+        pointer-events: none;
+        color: rgba(0, 0, 0, 0.42);
+      }
+
+      .jvx-multiselect.jvx-multiselect-disabled:not(.jvx-multiselect-flat-round) .input-container::before {
+        border-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.38) 0, rgba(0, 0, 0, 0.38) 2px, transparent 0, transparent 4px) 1 repeat;
+      }
+
+      .input-container {
+        min-height: 37px;
+        position: relative;
+        -webkit-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        -moz-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        -ms-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        -o-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+      }
+
+      .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::before, .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::after {
+        bottom: -1px;
+        content: "";
+        left: 0;
+        position: absolute;
+        transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        width: 100%;
+      }
+
+      .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::before {
+        border-color: rgba(0, 0, 0, 0.42);
+        border-style: solid;
+        border-width: thin 0 0;
+      }
+
+      .jvx-multiselect:not(.jvx-multiselect-flat-round) .input-container::after {
+        transform: scaleX(0);
+        border-style: solid;
+        border-width: thin 0;
+      }
+
+      .jvx-multiselect.jvx-multiselect-flat-round .input-container {
+        background: var(--jvx-multiselect-input-background-color, #D5D5D5);
+        padding: 2.5px 0.75em;
+        height: auto;
+        min-height: 44px;
+        box-sizing: border-box;
+        border-radius: 4px;
+      }
+
+      .input-container label {
+        position: absolute !important;
+        -webkit-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        -moz-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        -ms-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        -o-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        line-height: 3;
+        color: currentColor;
+      }
+
+      .input-container .input-container__remove-button-container {
+        height: 100%;
+        display: flex;
+        align-self: center;
+        align-items: center;
+      }
+
+      .input-container .input-container__remove-button {
+        cursor: pointer;
+        font-size: 15px;
+      }
+
+      .input-container .input-container__arrow > * {
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+      }
+
+      .input-container.selection-active label, .input-container.menu-is-open label {
+        transform: translateY(-18px) scale(0.75) translateX(-6px);
+        transform-origin: 20px;
+        display: inline;
+        line-height: 21px;
+        color: var(--jvx-multiselect-accent, green);
+      }
+
+      .jvx-multiselect.jvx-multiselect-flat-round .input-container.selection-active label,
+      .jvx-multiselect.jvx-multiselect-flat-round .input-container.menu-is-open label {
+        transform: translateY(-20px) scale(0.75) translateX(-20px);
+      }
+
+      .input-container .input-container__selected-container {
+        display: flex;
+        width: 100%;
+        position: relative;
+        left: 0;
+        top: 0;
+        min-height: 37px;
+      }
+
+      .jvx-multiselect:not(.jvx-multiselect-multi) .input-container .input-container__selected-container {
+        padding-top: 2px;
+      }
+
+      .input-container .input-container__selected-container .input-container__selected {
+        color: inherit;
+        flex: 1 1 100%;
+        left: 0;
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        max-height: 100%;
+        flex-wrap: wrap;
+      }
+
+      .input-container .input-container__selected-container .input-container__selected .input__item {
+        opacity: 1;
+      }
+
+      .input-container .input-container__selected-container .input-container__arrow {
+        width: 24px;
+        height: 100%;
+        display: flex;
+        align-self: center;
+        align-items: center;
+        transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+      }
+
+      .input-container .input-container__selected-container .input-container__arrow .lds-ring {
+        display: inline-block;
+        position: relative;
+        width: 24px;
+        height: 24px;
+      }
+
+      .input-container .input-container__selected-container .input-container__arrow .lds-ring div {
+        box-sizing: border-box;
+        display: block;
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        margin: 4px;
+        border: 2px solid var(--jvx-multiselect-accent, green);
+        border-radius: 50%;
+        animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        border-color: var(--jvx-multiselect-accent, green) transparent transparent transparent;
+      }
+
+      .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(1) {
+        animation-delay: -0.45s;
+      }
+
+      .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(2) {
+        animation-delay: -0.3s;
+      }
+
+      .input-container .input-container__selected-container .input-container__arrow .lds-ring div:nth-child(3) {
+        animation-delay: -0.15s;
+      }
+
+    `;
   }
 }
 

@@ -33,7 +33,7 @@
                     }
             </style>
             <jvx-multiselect searchInput multi label="Please select" closeOnClick="true"
-            >
+            ><div slot="option-item" ><div test="questo è test" textValue="[[option.text]]" value="[[option.value]]">[[option.text]] - [[option.value]]</div></div>
                 <!--                <div slot="option-item"><div class="option-item"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div></div></div>-->
                 <div slot="options">
 <div class="option" value="1" text="test 1">test 1</div>
