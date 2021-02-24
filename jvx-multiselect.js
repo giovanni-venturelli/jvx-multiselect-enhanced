@@ -799,7 +799,7 @@ class JvxMultiselect extends LitElement {
         background: var(--jvx-multiselect-input-background-color, #D5D5D5);
         padding: 2.5px 0.75em;
         height: auto;
-        min-height: 44px;
+        min-height: var(--jvx-material-input-height, 44px);
         box-sizing: border-box;
         border-radius: 4px;
       }
@@ -850,7 +850,7 @@ class JvxMultiselect extends LitElement {
         position: relative;
         left: 0;
         top: 0;
-        min-height: 37px;
+        min-height: var(--jvx-material-input-height, 37px);
       }
 
       .jvx-multiselect:not(.jvx-multiselect-multi) .input-container .input-container__selected-container {
