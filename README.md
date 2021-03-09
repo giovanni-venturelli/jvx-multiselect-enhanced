@@ -14,6 +14,7 @@ npm install jvx-multiselect
 | Name           | Description
 | -------------- | -----------
 | `option-item`  | Use this slot to pass a custom template for the options. Use [[option.propertyname]] to access the property of the item. The template should be styled inline.
+| `options`      | It's one of the way to pass the options to the select: the elements inside the slot shall be `divs` with a `value` attribute and a `text` attribute that are used to define the option.
 
 
 ### Properties/Attributes
@@ -66,6 +67,7 @@ npm install jvx-multiselect
 | `--jvx-multiselect-accent`                        | `green`               | Color of the underline ripple, the outline, and the caret  when active.
 | `--jvx-multiselect-error`                         | `red`                 | Color of the underline ripple, the outline, and the caret when has errors.
 | `--jvx-multiselect-background-color`              | `#fff`                | Color of the background of the menu.
+| `--jvx-material-input-height`                     | ``                    | Height of the select.
 
 ### HTTP Request
 

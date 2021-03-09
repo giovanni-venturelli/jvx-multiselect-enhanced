@@ -661,7 +661,8 @@ class JvxMultiselect extends LitElement {
         --jvx-material-input-primary: var(--jvx-multiselect-primary, blue);
         --jvx-material-input-accent: var(--jvx-multiselect-accent, green);
         --jvx-material-input-error: var(--jvx-multiselect-error, red);
-        --jvx-material-input-background: var(--jvx-multiselect-background-color, #fff)
+        --jvx-material-input-background: var(--jvx-multiselect-background-color, #fff);
+        --jvx-multiselect-computed-input-height: var(calc(44px - var(--jvx-material-input-height, 44px)), 0);
       }
 
       .jvx-multiselect-flat-round jvx-material-input {
@@ -811,7 +812,7 @@ class JvxMultiselect extends LitElement {
         -ms-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
         -o-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-        line-height: 3;
+        line-height: var(--jvx-material-input-height, 44px);
         color: currentColor;
       }
 
