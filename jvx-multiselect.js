@@ -658,6 +658,7 @@ class JvxMultiselect extends LitElement {
       }
 
       jvx-material-input {
+        --jvx-material-input-color: var(--jvx-material-input-color, blue);
         --jvx-material-input-primary: var(--jvx-multiselect-primary, blue);
         --jvx-material-input-accent: var(--jvx-multiselect-accent, green);
         --jvx-material-input-error: var(--jvx-multiselect-error, red);
@@ -724,7 +725,7 @@ class JvxMultiselect extends LitElement {
         padding-top: 12px;
         margin-top: 4px;
         position: relative;
-        color: var(--jvx-multiselect-primary, black);
+        color: var(--jvx-multiselect-color, black);
       }
 
       .jvx-multiselect.jvx-multiselect-error {

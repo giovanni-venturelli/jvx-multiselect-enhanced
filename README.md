@@ -66,6 +66,7 @@ npm install jvx-multiselect
 | `--jvx-multiselect-primary`                       | `blue`                | Color of the select bottom line when idle.
 | `--jvx-multiselect-accent`                        | `green`               | Color of the underline ripple, the outline, and the caret  when active.
 | `--jvx-multiselect-error`                         | `red`                 | Color of the underline ripple, the outline, and the caret when has errors.
+| `--jvx-multiselect-color`                         | `#000`                | Color of the text.
 | `--jvx-multiselect-background-color`              | `#fff`                | Color of the background of the menu.
 | `--jvx-material-input-height`                     | ``                    | Height of the select.
 
