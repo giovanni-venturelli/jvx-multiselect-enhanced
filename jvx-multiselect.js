@@ -74,7 +74,7 @@ class JvxMultiselect extends LitElement {
                     <!-- region arrow icon -->
                     <div class="input-container__arrow">
                         ${!this.isLoading ? html`
-                            <mwc-icon>arrow_drop_down
+                            <mwc-icon>expand_more
                             </mwc-icon>
                         ` : html`
                             <div class="lds-ring">
@@ -353,7 +353,7 @@ class JvxMultiselect extends LitElement {
 
   _toggleMenu() {
     if (!this.optionsMenu.open) {
-      if (!this.options || this.options.length === 0) {
+      if ((!this.options || this.options.length === 0) && this.url && this.url.length > 0) {
         this.pagination.page = 1;
         this.selectableItems = [];
         this._getList();
@@ -662,7 +662,6 @@ class JvxMultiselect extends LitElement {
         --jvx-material-input-accent: var(--jvx-multiselect-accent, green);
         --jvx-material-input-error: var(--jvx-multiselect-error, red);
         --jvx-material-input-background: var(--jvx-multiselect-background-color, #fff);
-        --jvx-multiselect-computed-input-height: var(calc(44px - var(--jvx-material-input-height, 44px)), 0);
       }
 
       .jvx-multiselect-flat-round jvx-material-input {
