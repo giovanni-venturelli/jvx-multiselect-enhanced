@@ -55,6 +55,8 @@ npm install jvx-multiselect
 | `invalid-jwt`         |               | `Object`| Fired when the backend call returns with an invalit jwt error. The detail contains the response.
 | `error`               |               | `String`| Fired when the backend call throws an exception. The detail contains the exception.
 | `scrollEnd`           |               | *None*  | Fired when the scrollbar in the options menu reaches the bottom.
+| `jvx-menu-openeed`    |               | *None*  | Fired when the the menu is opened.
+| `jvx-menu-closed`     |               | *None*  | Fired when the the menu is closed.
 
 ### CSS Custom Properties
 *None*

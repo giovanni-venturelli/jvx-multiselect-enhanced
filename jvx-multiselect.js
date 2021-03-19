@@ -368,6 +368,11 @@ class JvxMultiselect extends LitElement {
   _onMenuToggled() {
     this.isOpen = this.optionsMenu.open;
     this.isFocused = this.optionsMenu.open;
+    let event = new CustomEvent('jvx-menu-closed');
+    if(this.optionsMenu.open){
+      event = new CustomEvent('jvx-menu-opened');
+    }
+    this.dispatchEvent(event);
   }
 
   select(item) {
