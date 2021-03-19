@@ -34,17 +34,22 @@
             --jvx-multiselect-accent: #ffa200;
             }
     </style>
-    <jvx-multiselect searchInput multi label="Please select" closeOnClick="true"
+    <jvx-multiselect label="Please select" closeOnClick="true"
+                     itemText="nome"
+                     itemValue="id"
+                     value='[
+  {"id":"108","nome":"ciccio"}
+]'
     >
-        <div slot="option-item">
-            <div test="questo è test" textValue="[[option.text]]" value="[[option.value]]">[[option.text]] -
-                [[option.value]]
-            </div>
-        </div>
+<!--        <div slot="option-item">-->
+<!--            <div test="questo è test" textValue="[[option.text]]" value="[[option.value]]">[[option.text]] - -->
+<!--                [[option.value]]-->
+<!--            </div>-->
+<!--        </div>-->
         <!--                <div slot="option-item"><div class="option-item"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div></div></div>-->
         <div slot="options">
-            <div class="option" value="1" text="test 1">test 1</div>
-            <div class="option" value="2" text="test 2">test 2</div>
+            <div class="option" value="1011" text="___TEST">___TEST</div>
+            <div class="option" value="108" text="2M">2M</div>
         </div>
     </jvx-multiselect>
 

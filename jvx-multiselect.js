@@ -188,6 +188,10 @@ class JvxMultiselect extends LitElement {
       filter: {type: Object, reflect: true},
       labels: {type: Object, reflect: true},
       url: {type: String, reflect: true},
+      paginated: {type: Boolean, reflect: true},
+      listProp:  {type: String, reflect: true},
+      totalRowsProp:  {type: String, reflect: true},
+
       /**
        * The property of the response object which has to be translated to the value property of the options.
        */
@@ -267,6 +271,9 @@ class JvxMultiselect extends LitElement {
       Authorization: window.sessionStorage.getItem('trusted')
     }
     this.flatRound = false;
+    this.paginated = false;
+    this.listProp = 'message';
+    this.totalRowsProp = 'totalRows';
   }
 
   updated(changedProperties) {
@@ -302,7 +309,7 @@ class JvxMultiselect extends LitElement {
       mutations.forEach(function (mutation) {
         //Detect <img> insertion
         if (mutation.addedNodes.length) {
-          console.info('Node added: ', mutation.addedNodes[0])
+          // console.info('Node added: ', mutation.addedNodes[0])
         }
       })
     })
@@ -597,13 +604,17 @@ class JvxMultiselect extends LitElement {
             detail: response.data
           });
           this.dispatchEvent(event);
-          if (Array.isArray(response.data.message) && response.data.message.length > 0) {
-            this._mapResponse(response.data.message);
+          console.log(response.data);
+          const list = this.listProp && this.listProp.trim().length > 0? response.data[this.listProp.trim()]: response.data;
+          if (Array.isArray(list) && list.length > 0) {
+            this._mapResponse(list);
           } else {
             this.noData = true;
           }
-          this.pagination.page++;
-          this.totalRows = response.data.totalRows;
+          if(this.paginated) {
+            this.pagination.page++;
+            this.totalRows = this.totalRowsProp && this.totalRowsProp.trim().length > 0? response.data[this.totalRowsProp.trim()]: 0;
+          }
           this.optionsMenu.open = true;
           resolve(response.data);
         } else {
