@@ -189,8 +189,8 @@ class JvxMultiselect extends LitElement {
       labels: {type: Object, reflect: true},
       url: {type: String, reflect: true},
       paginated: {type: Boolean, reflect: true},
-      listProp:  {type: String, reflect: true},
-      totalRowsProp:  {type: String, reflect: true},
+      listProp: {type: String, reflect: true},
+      totalRowsProp: {type: String, reflect: true},
 
       /**
        * The property of the response object which has to be translated to the value property of the options.
@@ -376,7 +376,7 @@ class JvxMultiselect extends LitElement {
     this.isOpen = this.optionsMenu.open;
     this.isFocused = this.optionsMenu.open;
     let event = new CustomEvent('jvx-menu-closed');
-    if(this.optionsMenu.open){
+    if (this.optionsMenu.open) {
       event = new CustomEvent('jvx-menu-opened');
     }
     this.dispatchEvent(event);
@@ -529,16 +529,19 @@ class JvxMultiselect extends LitElement {
   }
 
   _walkText(key, node, item, nodes) {
-    if(!!node.attributes) {
-      let numAttrs = node.attributes.length;
-      for (let i = 0; i < numAttrs; i++){
-        let attr = node.attributes.item(i);
-        if(attr && attr.name) {
-          node.setAttribute(attr.name, attr.value.replace('[[option.' + key + ']]', item[key]));
+    if (node.nodeType === 1) {
+      if (!!node.attributes) {
+        let numAttrs = node.attributes.length;
+        for (let i = 0; i < numAttrs; i++) {
+          let attr = node.attributes.item(i);
+          if (attr && attr.name) {
+            if(node.getAttribute(attr.name).includes('[[option.' + key + ']]') && attr.name!=='data-original-text') {
+              node.setAttribute(node.attributes[attr.name].name, node.getAttribute(attr.name).replace('[[option.' + key + ']]', item[key]));
+            }
+          }
         }
       }
-    }
-    if (node.nodeType === 3) {
+    } else if (node.nodeType === 3) {
       if (node.parentNode.dataset.originalText.includes('[[option.' + key + ']]')) {
         node.parentNode.setAttribute('data-item-value', item[this.itemValue]);
         node.data = node.parentNode.dataset.originalText.replace('[[option.' + key + ']]', item[key]);
@@ -613,15 +616,15 @@ class JvxMultiselect extends LitElement {
             detail: response.data
           });
           this.dispatchEvent(event);
-          const list = this.listProp && this.listProp.trim().length > 0? response.data[this.listProp.trim()]: response.data;
+          const list = this.listProp && this.listProp.trim().length > 0 ? response.data[this.listProp.trim()] : response.data;
           if (Array.isArray(list) && list.length > 0) {
             this._mapResponse(list);
           } else {
             this.noData = true;
           }
-          if(this.paginated) {
+          if (this.paginated) {
             this.pagination.page++;
-            this.totalRows = this.totalRowsProp && this.totalRowsProp.trim().length > 0? response.data[this.totalRowsProp.trim()]: 0;
+            this.totalRows = this.totalRowsProp && this.totalRowsProp.trim().length > 0 ? response.data[this.totalRowsProp.trim()] : 0;
           }
           this.optionsMenu.open = true;
           resolve(response.data);
