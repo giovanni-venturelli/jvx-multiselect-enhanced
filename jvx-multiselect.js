@@ -529,6 +529,15 @@ class JvxMultiselect extends LitElement {
   }
 
   _walkText(key, node, item, nodes) {
+    if(!!node.attributes) {
+      let numAttrs = node.attributes.length;
+      for (let i = 0; i < numAttrs; i++){
+        let attr = node.attributes.item(i);
+        if(attr && attr.name) {
+          node.setAttribute(attr.name, attr.value.replace('[[option.' + key + ']]', item[key]));
+        }
+      }
+    }
     if (node.nodeType === 3) {
       if (node.parentNode.dataset.originalText.includes('[[option.' + key + ']]')) {
         node.parentNode.setAttribute('data-item-value', item[this.itemValue]);
@@ -536,7 +545,6 @@ class JvxMultiselect extends LitElement {
       }
       for (const akey of Object.keys(node.parentNode.attributes)) {
         node.parentNode.setAttribute(node.parentNode.attributes[akey].name, node.parentNode.getAttribute(node.parentNode.attributes[akey].name).replace('[[option.' + key + ']]', item[key]));
-
       }
     }
     if (node.nodeType === 1 && node.nodeName !== "SCRIPT") {
@@ -544,6 +552,7 @@ class JvxMultiselect extends LitElement {
         this._walkText(key, node.childNodes[i], item, nodes);
       }
     }
+
   }
 
   _onSearch(e) {
@@ -604,7 +613,6 @@ class JvxMultiselect extends LitElement {
             detail: response.data
           });
           this.dispatchEvent(event);
-          console.log(response.data);
           const list = this.listProp && this.listProp.trim().length > 0? response.data[this.listProp.trim()]: response.data;
           if (Array.isArray(list) && list.length > 0) {
             this._mapResponse(list);

@@ -35,18 +35,11 @@
             }
     </style>
     <jvx-multiselect label="Please select" closeOnClick="true"
-                     itemText="nome"
-                     itemValue="id"
                      value='[
-  {"id":"108","nome":"ciccio"}
+  {"value":"108","text":"2M"}
 ]'
     >
-<!--        <div slot="option-item">-->
-<!--            <div test="questo è test" textValue="[[option.text]]" value="[[option.value]]">[[option.text]] - -->
-<!--                [[option.value]]-->
-<!--            </div>-->
-<!--        </div>-->
-        <!--                <div slot="option-item"><div class="option-item"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div></div></div>-->
+        <div slot="option-item"><div class="option-item" staminchia="[[option.value]]"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div><img src="[[option.text]]"/></div></div>
         <div slot="options">
             <div class="option" value="1011" text="___TEST">___TEST</div>
             <div class="option" value="108" text="2M">2M</div>
