@@ -39,6 +39,9 @@ npm install jvx-multiselect
 | `searchInput`           | `Boolean`                       | `false`   | True to enable the search input for the options list.
 | `searchLabel`           | `String`                        | `'search'`| The label of the search input.
 | `useOnlyHttpParameters` | `Boolean`                       | `false`   | True to ignore the default pagination.
+| `paginated`             | `Boolean`                       | `false`   | True if the the response is never paginated.
+| `listProp`              | `String`                        | `false`   | Name of the property in response.data where the list is stored.
+| `totalRowsProp`         | `String`                        | `false`   | Name of the property in response.data where the number of total rows is stored.
 | `url`                   | `String`                        | `''`      | The url to get the options.
 | `value`                 | `Array`                         | `[]`      | The current value of the selection.
 
