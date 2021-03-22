@@ -502,7 +502,6 @@ class JvxMultiselect extends LitElement {
               }
             }
             newOption.selected = this.value.findIndex(m => m[this.itemValue] === newOption[this.itemValue]) !== -1;
-            debugger;
             this.selectableItems.push(newOption);
           }
         }
