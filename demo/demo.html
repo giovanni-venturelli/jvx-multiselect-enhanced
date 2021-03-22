@@ -39,10 +39,10 @@
   {"value":"108","text":"2M"}
 ]'
     >
-        <div slot="option-item"><div class="option-item"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div><img src="[[option.text]]"/></div></div>
+        <div slot="option-item"  style="width:100%"><div class="option-item"  style="width:100%"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div><img data-jvx-src="[[option.preview]]"/></div></div>
         <div slot="options">
-            <div class="option" value="1011" text="___TEST">___TEST</div>
-            <div class="option" value="108" text="2M">2M</div>
+            <div class="option" value="1011" text="___TEST" data-jvx-preview="path/to/test.jpg">___TEST</div>
+            <div class="option" value="108" text="2M" data-jvx-preview="path/to/2M.jpg">2M</div>
         </div>
     </jvx-multiselect>
 

@@ -274,6 +274,10 @@ class JvxMultiselect extends LitElement {
     this.paginated = false;
     this.listProp = 'message';
     this.totalRowsProp = 'totalRows';
+    let style = document.createElement('style');
+
+    style.textContent = `.mdc-list-item__text {color: red;}`;
+    this.shadowRoot.appendChild(style);
   }
 
   updated(changedProperties) {
@@ -485,7 +489,20 @@ class JvxMultiselect extends LitElement {
             let newOption = {};
             newOption[this.itemValue] = child.getAttribute('value');
             newOption[this.itemText] = child.getAttribute('text');
+
+            if (!!child.attributes) {
+              let numAttrs = child.attributes.length;
+              for (let i = 0; i < numAttrs; i++) {
+                let attr = child.attributes.item(i);
+                if (attr && attr.name) {
+                  if (attr.name !== 'data-original-text') {
+                    newOption[attr.name.replace('data-jvx-', '')] = child.getAttribute(attr.name);
+                  }
+                }
+              }
+            }
             newOption.selected = this.value.findIndex(m => m[this.itemValue] === newOption[this.itemValue]) !== -1;
+            debugger;
             this.selectableItems.push(newOption);
           }
         }
@@ -535,8 +552,8 @@ class JvxMultiselect extends LitElement {
         for (let i = 0; i < numAttrs; i++) {
           let attr = node.attributes.item(i);
           if (attr && attr.name) {
-            if(node.getAttribute(attr.name).includes('[[option.' + key + ']]') && attr.name!=='data-original-text') {
-              node.setAttribute(node.attributes[attr.name].name, node.getAttribute(attr.name).replace('[[option.' + key + ']]', item[key]));
+            if (node.getAttribute(attr.name).includes('[[option.' + key + ']]') && attr.name !== 'data-original-text') {
+              node.setAttribute(attr.name.replace('data-jvx-', ''), node.getAttribute(attr.name).replace('[[option.' + key + ']]', item[key]));
             }
           }
         }
@@ -716,10 +733,16 @@ class JvxMultiselect extends LitElement {
         overflow: auto;
       }
 
+      .list-option-content {
+        width: 100%;
+      }
+
       mwc-list-item {
         height: auto;
         min-height: 40px;
         padding: 10px 20px;
+        width: 100%;
+        box-sizing: border-box;
       }
 
       #optionsMenu {
@@ -941,6 +964,9 @@ class JvxMultiselect extends LitElement {
         animation-delay: -0.15s;
       }
 
+      ::shadow ::shadow .mdc-list-item__text {
+        color: red;
+      }
     `;
   }
 }

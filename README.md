@@ -103,7 +103,7 @@ The headers can be set in the property `requestHeaders`. By default the jvx-mult
 The default headers are:
 
 ```javascript
-{
+var requestHeaders = {
   'Accept': 'application/json',
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
@@ -116,8 +116,8 @@ The default headers are:
 By now the response must contain an array of objects, stored in the property `message` in the `response.data` object.
 
 The object template should be 
-```javascript
-{
+```typescript
+var obj: {
   value: Number|String,
   text: String
 }
@@ -125,7 +125,7 @@ The object template should be
 If the object comes in different form, via the property `labels` it is possible to set an object that maps the properties in order to make it readable for the jvx-multiselect.
 For example if the response object template is
 ```javascript
-{
+var response = {
   id: 1,
   title: 'This is the title',
   description: 'This is the description',
@@ -135,14 +135,14 @@ For example if the response object template is
 ``` 
 and the property `labels` is
 ```javascript
-{
+var labels = {
   id: 'value',
   title: 'text'
 }
 ``` 
 the response object will be mapped like this
 ```javascript
-{
+var response = {
   value: 1,
   text: 'This is the title',
   id: 1,
@@ -159,7 +159,7 @@ When the user searches for a term, the property `searchInput` is updated with th
 #### Pagination
 The property `pagination` is structured by default as follows:
 ```javascript
-{
+var pagination = {
   page: 1,
   pageSize: 15
 }
@@ -167,6 +167,52 @@ The property `pagination` is structured by default as follows:
 Whenever the scrollbar in the menu reaches the bottom, the property `page` is incremented by one and a further http request is called. When the user searches or closes the menu the property `page` is set again at `1`.
 The jvx-multiselect copies these values individually in the object of the search parameters.
 
+### Slots
+#### option-item
+The slot `option-item` allows to define a template for the options that will be shown in the dropdown menu. It is possible to access the context wrapping it between square brackets.
+i.e.: Let's say we have the following structure:
+
+```javascript
+var options = [{
+  value: 1, 
+  text: 'Lorem ipsum',
+  color: 'blue',
+  preview: 'path/to/first-image.jpg'
+},
+  {
+    value: 2,
+    text: 'dolor sit amet',
+    color: 'red',
+    preview: 'path/to/second-image.jpg'
+  }];
+```
+
+and we want our options to have in the text field both the property color and the property text.
+We can write the template like so:
+```html
+<div slot="option-item">[[option.text]] [[option.color]]</div>
+```
+
+It's possible to use the context inside attributes too. In that case it's suggested to preppend the string `data-jvx-` to all the attributes' names that will access the context.
+i.e. 
+```html
+<div slot="option-item">
+    <span>[[option.text]]</span>
+    <span>
+        <img data-jvx-src="[[option.preview]]"/>
+    </span>
+</div>
+```
+#### options
+The slot options is there to provide an easy way to describe all the available options of the select.
+This is necessary because some frameworks may have problems in passing the array to the `options` prop.
+Each option will be a `div` and all the properties of the corresponding object can be written inside an attribute preceded by `data-jvx-`, like so:
+```html
+<div slot="options">
+    <div value="1" text="Lorem ipsum" data-jvx-color="blue" data-jvx-preview="path/to/first-image.jpg"></div>
+    <div value="2" text="dolor sit amet" data-jvx-color="red" data-jvx-preview="path/to/second-image.jpg"></div>
+</div>
+```
 
 
 
