@@ -485,6 +485,7 @@ class JvxMultiselect extends LitElement {
   _updateOptionsSlot() {
     let slot = this.shadowRoot.querySelector('slot[name="options"]');
     if (!!slot && slot.assignedNodes().length > 0) {
+      this.selectableItems.length = 0;
       const nodes = slot.assignedNodes();
 
       for (let n of nodes) {
