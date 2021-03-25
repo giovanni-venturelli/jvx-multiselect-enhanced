@@ -485,16 +485,20 @@ class JvxMultiselect extends LitElement {
   _updateOptionsSlot() {
     let slot = this.shadowRoot.querySelector('slot[name="options"]');
     if (!!slot && slot.assignedNodes().length > 0) {
-      this.selectableItems.length = 0;
       const nodes = slot.assignedNodes();
 
       for (let n of nodes) {
         for (let child of n.children) {
-          if (this.selectableItems.findIndex(o => o[this.itemValue] === child.getAttribute('value')) === -1) {
-            let newOption = {};
-            newOption[this.itemValue] = child.getAttribute('value');
-            newOption[this.itemText] = child.getAttribute('text');
+          if (this.selectableItems.findIndex(o => (o[this.itemValue] === child.getAttribute(this.itemValue) || o[this.itemValue] === child.getAttribute('data-jvx-'+this.itemValue))) === -1) {
 
+            let newOption = {};
+            if(child.getAttribute('data-jvx-'+this.itemValue)){
+              newOption[this.itemValue] = child.getAttribute('data-jvx-'+this.itemValue);
+              newOption[this.itemText] = child.getAttribute('data-jvx-'+this.itemText);
+            }else {
+              newOption[this.itemValue] = child.getAttribute(this.itemValue);
+              newOption[this.itemText] = child.getAttribute(this.itemText);
+            }
             if (!!child.attributes) {
               let numAttrs = child.attributes.length;
               for (let i = 0; i < numAttrs; i++) {
