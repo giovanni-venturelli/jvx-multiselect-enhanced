@@ -38,6 +38,14 @@
             --jvx-multiselect-placeholder-font-weight: 600;
             }
     </style>
+<!--    <jvx-multiselect placeholder="Please select" closeOnClick="true" options='[{"value":"1011", "text":"___TEST"}, {"value":"108", "text":"2M"}]'>-->
+<!--        <div slot="option-item"  style="width:100%"><div class="option-item"  style="width:100%"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div><img data-jvx-src="[[option.preview]]"/></div></div>-->
+<!--&lt;!&ndash;        <div slot="options">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="option" value="1011" text="___TEST" data-jvx-preview="path/to/test.jpg">___TEST</div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="option" value="108" text="2M" data-jvx-preview="path/to/2M.jpg">2M</div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--    </jvx-multiselect>-->
+
     <jvx-multiselect placeholder="Please select" closeOnClick="true">
         <div slot="option-item"  style="width:100%"><div class="option-item"  style="width:100%"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div><img data-jvx-src="[[option.preview]]"/></div></div>
         <div slot="options">
@@ -45,7 +53,6 @@
             <div class="option" value="108" text="2M" data-jvx-preview="path/to/2M.jpg">2M</div>
         </div>
     </jvx-multiselect>
-
 </div>
 </body>
 </html>

@@ -141,7 +141,7 @@ class JvxMultiselect extends LitElement {
         <div style="display: none">
             <div id="option-item-template">
                 <div>
-                    <slot @slotchange="${this._updateOptionSlot()}" name="option-item"></slot>
+                    <slot name="option-item"></slot>
                 </div>
             </div>
             <slot @slotchange="${this._updateOptionsSlot()}" name="options"></slot>
@@ -486,6 +486,7 @@ class JvxMultiselect extends LitElement {
     let slot = this.shadowRoot.querySelector('slot[name="options"]');
     if (!!slot && slot.assignedNodes().length > 0) {
       const nodes = slot.assignedNodes();
+
       for (let n of nodes) {
         for (let child of n.children) {
           if (this.selectableItems.findIndex(o => o[this.itemValue] === child.getAttribute('value')) === -1) {
