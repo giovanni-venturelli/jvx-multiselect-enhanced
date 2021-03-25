@@ -43,6 +43,7 @@ class JvxMultiselect extends LitElement {
                 <label>${this.label}</label>
                 <div class="input-container__selected-container" @click="${this._toggleMenu}">
                     <div class="input-container__selected">
+                        ${this.placeholder && this.placeholder.length > 0 && (!this.label || this.label.length === 0) && this.value.length === 0? html`<span class="placeholder">${this.placeholder}</span>`: html``}
                         ${this.multi ? html`
                                     <span>
        ${repeat(this.value, item => item[this.itemValue], (item, index) => html`
@@ -167,6 +168,7 @@ class JvxMultiselect extends LitElement {
       },
       multi: {type: Boolean, reflect: true, attribute: 'multi'},
       closeOnClick: {type: Boolean, reflect: true},
+      placeholder: {type: String, reflect: true},
       label: {type: String, reflect: true},
       searchLabel: {type: String, reflect: true},
       value: {type: Array, reflect: true},
@@ -243,6 +245,7 @@ class JvxMultiselect extends LitElement {
     this.hasErrors = false;
     this.isSearching = false;
     this.disabled = false;
+    this.placeholder = '';
     this.label = '';
     this.searchLabel = 'search';
     this.closeOnClick = false;
@@ -706,6 +709,12 @@ class JvxMultiselect extends LitElement {
         --jvx-material-input-accent: var(--jvx-multiselect-accent, green);
         --jvx-material-input-error: var(--jvx-multiselect-error, red);
         --jvx-material-input-background: var(--jvx-multiselect-background-color, #fff);
+        --jvx-material-label-color: var(--jvx-multiselect-label-color, currentColor);
+        --jvx-material-label-font-size: var(--jvx-multiselect-font-size, 14px);
+        --jvx-material-label-font-weigth: var(--jvx-multiselect-font-weight, 400);
+        --jvx-material-placeholder-color: var(--jvx-multiselect-placeholder-color, --jvx-multiselect-color);
+        --jvx-material-placeholder-font-size: var(--jvx-material-placeholder-font-size, 14px);
+        --jvx-material-placeholder-font-weight: var(--jvx-material-placeholder-font-weight, 400);
       }
 
       .jvx-multiselect-flat-round jvx-material-input {
@@ -862,7 +871,14 @@ class JvxMultiselect extends LitElement {
         -o-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
         line-height: var(--jvx-material-input-height, 44px);
-        color: currentColor;
+        color: var(--jvx-multiselect-label-color, currentColor);
+        font-size: var(--jvx-multiselect-label-font-size, 14px);
+        font-weight: var(--jvx-multiselect-label-font-weight, 400);
+      }
+      .input-container .placeholder {
+        color: var(--jvx-multiselect-placeholder-color);
+        font-size: var(--jvx-multiselect-placeholder-font-size);
+        font-weight: var(--jvx-multiselect-placeholder-font-weight)
       }
 
       .input-container .input-container__remove-button-container {

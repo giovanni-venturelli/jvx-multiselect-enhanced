@@ -30,6 +30,7 @@ npm install jvx-multiselect
 | `httpParameters`        | `Object`                        | `null`    | The custom search value and pagination for the asynchronous selection.
 | `itemText`              | `String`                        | `'text'`  | The name of the property of the option object that will be displayed as description of the options.
 | `itemValue`             | `String`                        | `'value'` | The name of the property of the option object that will be treated as value of the options.
+| `placeholder`           | `String`                        | `''`      | The placeholder.
 | `label`                 | `String`                        | `''`      | The label.
 | `labels`                | `Object`                        | `null`    | The dictionary to map the response.
 | `multi`                 | `Boolean`                       | `false`   | True if it's a multiselect.
@@ -66,14 +67,20 @@ npm install jvx-multiselect
 
 #### Global Custom Properties
 
-| Name                                              | Default               | Description
-| ------------------------------------------------- | --------------------- |------------
-| `--jvx-multiselect-primary`                       | `blue`                | Color of the select bottom line when idle.
-| `--jvx-multiselect-accent`                        | `green`               | Color of the underline ripple, the outline, and the caret  when active.
-| `--jvx-multiselect-error`                         | `red`                 | Color of the underline ripple, the outline, and the caret when has errors.
-| `--jvx-multiselect-color`                         | `#000`                | Color of the text.
-| `--jvx-multiselect-background-color`              | `#fff`                | Color of the background of the menu.
-| `--jvx-material-input-height`                     | ``                    | Height of the select.
+| Name                                              | Default                           | Description
+| ------------------------------------------------- | --------------------------------- |------------
+| `--jvx-multiselect-primary`                       | `blue`                            | Color of the select bottom line when idle.
+| `--jvx-multiselect-accent`                        | `green`                           | Color of the underline ripple, the outline, and the caret  when active.
+| `--jvx-multiselect-error`                         | `red`                             | Color of the underline ripple, the outline, and the caret when has errors.
+| `--jvx-multiselect-color`                         | `#000`                            | Color of the text.
+| `--jvx-multiselect-background-color`              | `#fff`                            | Color of the background of the menu.
+| `--jvx-material-input-height`                     | ``                                | Height of the select.
+| `--jvx-multiselect-label-color`                   | `currentColor`                    | Color of the label
+| `--jvx-multiselect-label-font-size`               | `14px`                            | Font size of the label
+| `--jvx-multiselect-label-font-weight`             | `400`                             | Font weight of the label
+| `--jvx-multiselect-placeholder-color`             | `var(--jvx-multiselect-color`)    | Color of the placeholder
+| `--jvx-multiselect-placeholder-font-size`         | `14px`                            | Font size of the placeholder
+| `--jvx-multiselect-placeholder-font-weight`       | `400`                             | Font weight of the placeholder
 
 ### HTTP Request
 

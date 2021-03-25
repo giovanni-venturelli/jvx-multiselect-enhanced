@@ -32,13 +32,13 @@
             --jvx-multiselect-primary: green;
             --jvx-multiselect-warn: crimson;
             --jvx-multiselect-accent: #ffa200;
+
+            --jvx-multiselect-placeholder-color: red;
+            --jvx-multiselect-placeholder-font-size: 18px;
+            --jvx-multiselect-placeholder-font-weight: 600;
             }
     </style>
-    <jvx-multiselect label="Please select" closeOnClick="true"
-                     value='[
-  {"value":"108","text":"2M"}
-]'
-    >
+    <jvx-multiselect placeholder="Please select" closeOnClick="true">
         <div slot="option-item"  style="width:100%"><div class="option-item"  style="width:100%"><div>valore: [[option.value]]</div><div>testo: [[option.text]]</div><div>selezionato: [[option.selected]]</div><img data-jvx-src="[[option.preview]]"/></div></div>
         <div slot="options">
             <div class="option" value="1011" text="___TEST" data-jvx-preview="path/to/test.jpg">___TEST</div>
