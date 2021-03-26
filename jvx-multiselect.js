@@ -552,7 +552,7 @@ class JvxMultiselect extends LitElement {
                                 }
                             }
                         }
-                        newOption.selected = isValueNumeric? this.value.findIndex(m => parseFloat(m[this.itemValue]) === newOption[this.itemValue]) !== -1 : this.value.findIndex(m => m[this.itemValue] === newOption[this.itemValue]) !== -1;
+                        newOption.selected = isValueNumeric? this.value.findIndex(m =>m[this.itemValue] ===  parseFloat(newOption[this.itemValue])) !== -1 : this.value.findIndex(m => m[this.itemValue] === newOption[this.itemValue]) !== -1;
                         this.selectableItems.push(newOption);
                     }
                 }
