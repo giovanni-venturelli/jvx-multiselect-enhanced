@@ -510,14 +510,35 @@ class JvxMultiselect extends LitElement {
 
             for (let n of nodes) {
                 for (let child of n.children) {
-                    if (this.selectableItems.findIndex(o => (o[this.itemValue] === child.getAttribute(this.itemValue) || o[this.itemValue] === child.getAttribute('data-jvx-' + this.itemValue))) === -1) {
+                    let isValueNumeric = false;
+                    let areEqual = (this.selectableItems.findIndex(o => (o[this.itemValue] === child.getAttribute(this.itemValue) || o[this.itemValue] === child.getAttribute('data-jvx-' + this.itemValue))) === -1);
+                    if(!areEqual  && !isNaN(child.getAttribute(this.itemValue)) &&
+                      !isNaN(parseFloat(child.getAttribute(this.itemValue)))){
+                        isValueNumeric = true;
+                        areEqual = this.selectableItems.findIndex(o=>(o[this.itemValue] === parseFloat(child.getAttribute(this.itemValue)))) > -1;
+                    } else if(!areEqual && !isNaN(child.getAttribute('data-jvx-'+this.itemValue)) &&
+                      !isNaN(parseFloat(child.getAttribute('data-jvx-'+this.itemValue)))) {
+                        isValueNumeric = true;
+                        areEqual = this.selectableItems.findIndex(o=>(o[this.itemValue] === parseFloat(child.getAttribute('data-jvx-'+this.itemValue))))>-1;
+                    }
+
+
+                    if (!areEqual) {
 
                         let newOption = {};
                         if (child.getAttribute('data-jvx-' + this.itemValue)) {
-                            newOption[this.itemValue] = child.getAttribute('data-jvx-' + this.itemValue);
+                            let val = child.getAttribute('data-jvx-' + this.itemValue);
+                            if(isValueNumeric){
+                                val = parseFloat(child.getAttribute('data-jvx-' + this.itemValue));
+                            }
+                            newOption[this.itemValue] = val;
                             newOption[this.itemText] = child.getAttribute('data-jvx-' + this.itemText);
                         } else {
-                            newOption[this.itemValue] = child.getAttribute(this.itemValue);
+                            let val = child.getAttribute(this.itemValue);
+                            if(isValueNumeric){
+                                val = parseFloat(child.getAttribute(this.itemValue));
+                            }
+                            newOption[this.itemValue] = val;
                             newOption[this.itemText] = child.getAttribute(this.itemText);
                         }
                         if (!!child.attributes) {
