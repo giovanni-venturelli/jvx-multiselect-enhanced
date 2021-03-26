@@ -736,15 +736,15 @@ class JvxMultiselect extends LitElement {
             --jvx-material-input-accent: var(--jvx-multiselect-accent, green);
             --jvx-material-input-error: var(--jvx-multiselect-error, red);
             --jvx-material-input-background: var(--jvx-multiselect-background-color, #fff);
-            --jvx-material-selection-color: var(--jvx-multiselect-selection-color, currentColor);
-            --jvx-material-selection-font-size: var(--jvx-multiselect-selection-font-size, 14px);
-            --jvx-material-selection-font-weight: var(--jvx-multiselect-selection-font-weight, 400);
-            --jvx-material-label-color: var(--jvx-multiselect-label-color, currentColor);
-            --jvx-material-label-font-size: var(--jvx-multiselect-label-font-size, 14px);
-            --jvx-material-label-font-weight: var(--jvx-multiselect-label-font-weight, 400);
-            --jvx-material-placeholder-color: var(--jvx-multiselect-placeholder-color, --jvx-multiselect-color);
-            --jvx-material-placeholder-font-size: var(--jvx-material-placeholder-font-size, 14px);
-            --jvx-material-placeholder-font-weight: var(--jvx-material-placeholder-font-weight, 400);
+            --jvx-multiselect-selection-color: var(--jvx-multiselect-selection-color, currentColor);
+            --jvx-multiselect-selection-font-size: var(--jvx-multiselect-selection-font-size, 14px);
+            --jvx-multiselect-selection-font-weight: var(--jvx-multiselect-selection-font-weight, 400);
+            --jvx-multiselect-lebl-color: var(--jvx-multiselect-label-color, currentColor);
+            --jvx-multiselect-lebl-font-size: var(--jvx-multiselect-label-font-size, 14px);
+            --jvx-multiselect-lebl-font-weight: var(--jvx-multiselect-label-font-weight, 400);
+            --jvx-multiselect-placeholder-color: var(--jvx-multiselect-placeholder-color, --jvx-multiselect-color);
+            --jvx-multiselect-placeholder-font-size: var(--jvx-multiselect-placeholder-font-size, 14px);
+            --jvx-multiselect-placeholder-font-weight: var(--jvx-multiselect-placeholder-font-weight, 400);
           }
 
           .jvx-multiselect-flat-round jvx-material-input {
@@ -955,9 +955,9 @@ class JvxMultiselect extends LitElement {
           }
 
           .input-container .input-container__selected-container .input-container__selected {
-            color: var(--jvx-material-selection-color, inherit);
-            font-size: var(--jvx-material-selection-font-size);
-            font-weight: var(--jvx-material-selection-font-weight);
+            color: var(--jvx-multiselect-selection-color, inherit);
+            font-size: var(--jvx-multiselect-selection-font-size);
+            font-weight: var(--jvx-multiselect-selection-font-weight);
             flex: 1 1 100%;
             left: 0;
             min-height: 100%;
