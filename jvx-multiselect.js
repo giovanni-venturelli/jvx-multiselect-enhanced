@@ -511,7 +511,7 @@ class JvxMultiselect extends LitElement {
             for (let n of nodes) {
                 for (let child of n.children) {
                     let isValueNumeric = false;
-                    let areEqual = (this.selectableItems.findIndex(o => (o[this.itemValue] === child.getAttribute(this.itemValue) || o[this.itemValue] === child.getAttribute('data-jvx-' + this.itemValue))) === -1);
+                    let areEqual = (this.selectableItems.findIndex(o => (o[this.itemValue] === child.getAttribute(this.itemValue) || o[this.itemValue] === child.getAttribute('data-jvx-' + this.itemValue))) > -1);
                     if(!areEqual  && !isNaN(child.getAttribute(this.itemValue)) &&
                       !isNaN(parseFloat(child.getAttribute(this.itemValue)))){
                         isValueNumeric = true;
