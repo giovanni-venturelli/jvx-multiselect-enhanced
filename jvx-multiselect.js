@@ -11,6 +11,7 @@ import {css, html, LitElement} from 'lit-element';
 import {classMap} from 'lit-html/directives/class-map';
 import {repeat} from 'lit-html/directives/repeat';
 import 'paper-chip';
+import * as Polymer from "@polymer/polymer/lib/legacy/polymer.dom";
 
 /**
  * `jvx-multiselect`
@@ -92,7 +93,8 @@ class JvxMultiselect extends LitElement {
                 </div>
                 <!-- endregion -->
                 <!-- region menu -->
-                <mwc-menu fullwidth id="optionsMenu" @closed="${this._onMenuToggled}" @opened="${this._onMenuToggled}">
+                <mwc-menu fullwidth id="optionsMenu" @closed="${this._onMenuToggled}" @opened="${this._onMenuToggled}"
+                          corner="TOP_LEFT" absolute>
 
                     <!-- region search input -->
                     <div class="optionsMenu__search-input-container">
@@ -140,7 +142,7 @@ class JvxMultiselect extends LitElement {
             </div>
 
             <div style="display: none">
-                <slot  @slotchange="${this._updateSelectionSlot()}" name="selected-item"></slot>
+                <slot @slotchange="${this._updateSelectionSlot()}" name="selected-item"></slot>
                 <div id="option-item-template">
                     <div>
                         <slot @slotchange="${this._updateOptionSlot()}" name="option-item"></slot>
@@ -283,7 +285,14 @@ class JvxMultiselect extends LitElement {
 
         style.textContent = `.mdc-list-item__text {color: red;}`;
         this.shadowRoot.appendChild(style);
-        setTimeout(()=>{this._updateSelectionSlot()},0)
+        setTimeout(() => {
+            this._updateSelectionSlot();
+            const menu = Polymer.dom(this.shadowRoot).querySelector('mwc-menu');
+            const jvxMultiselect = Polymer.dom(this.shadowRoot).querySelector('#multiInputField');
+            menu.x = -jvxMultiselect.getBoundingClientRect().left;
+            menu.y = -jvxMultiselect.getBoundingClientRect().bottom;
+            menu.show();
+        }, 0)
     }
 
     updated(changedProperties) {
@@ -415,7 +424,9 @@ class JvxMultiselect extends LitElement {
         //TODO: rimuovere per pubblicazione
         this.value = this.selected;
         // FINE TODO
-        setTimeout(()=>{this._updateSelectionSlot()}, 0);
+        setTimeout(() => {
+            this._updateSelectionSlot()
+        }, 0);
         this.dispatchEvent(event);
     }
 
@@ -512,14 +523,14 @@ class JvxMultiselect extends LitElement {
                 for (let child of n.children) {
                     let isValueNumeric = false;
                     let areEqual = (this.selectableItems.findIndex(o => (o[this.itemValue] === child.getAttribute(this.itemValue) || o[this.itemValue] === child.getAttribute('data-jvx-' + this.itemValue))) > -1);
-                    if(!areEqual  && !isNaN(child.getAttribute(this.itemValue)) &&
-                      !isNaN(parseFloat(child.getAttribute(this.itemValue)))){
+                    if (!areEqual && !isNaN(child.getAttribute(this.itemValue)) &&
+                        !isNaN(parseFloat(child.getAttribute(this.itemValue)))) {
                         isValueNumeric = true;
-                        areEqual = this.selectableItems.findIndex(o=>(o[this.itemValue] === parseFloat(child.getAttribute(this.itemValue)))) > -1;
-                    } else if(!areEqual && !isNaN(child.getAttribute('data-jvx-'+this.itemValue)) &&
-                      !isNaN(parseFloat(child.getAttribute('data-jvx-'+this.itemValue)))) {
+                        areEqual = this.selectableItems.findIndex(o => (o[this.itemValue] === parseFloat(child.getAttribute(this.itemValue)))) > -1;
+                    } else if (!areEqual && !isNaN(child.getAttribute('data-jvx-' + this.itemValue)) &&
+                        !isNaN(parseFloat(child.getAttribute('data-jvx-' + this.itemValue)))) {
                         isValueNumeric = true;
-                        areEqual = this.selectableItems.findIndex(o=>(o[this.itemValue] === parseFloat(child.getAttribute('data-jvx-'+this.itemValue))))>-1;
+                        areEqual = this.selectableItems.findIndex(o => (o[this.itemValue] === parseFloat(child.getAttribute('data-jvx-' + this.itemValue)))) > -1;
                     }
 
 
@@ -528,14 +539,14 @@ class JvxMultiselect extends LitElement {
                         let newOption = {};
                         if (child.getAttribute('data-jvx-' + this.itemValue)) {
                             let val = child.getAttribute('data-jvx-' + this.itemValue);
-                            if(isValueNumeric){
+                            if (isValueNumeric) {
                                 val = parseFloat(child.getAttribute('data-jvx-' + this.itemValue));
                             }
                             newOption[this.itemValue] = val;
                             newOption[this.itemText] = child.getAttribute('data-jvx-' + this.itemText);
                         } else {
                             let val = child.getAttribute(this.itemValue);
-                            if(isValueNumeric){
+                            if (isValueNumeric) {
                                 val = parseFloat(child.getAttribute(this.itemValue));
                             }
                             newOption[this.itemValue] = val;
@@ -552,7 +563,7 @@ class JvxMultiselect extends LitElement {
                                 }
                             }
                         }
-                        newOption.selected = isValueNumeric? this.value.findIndex(m =>m[this.itemValue] ===  parseFloat(newOption[this.itemValue])) !== -1 : this.value.findIndex(m => m[this.itemValue] === newOption[this.itemValue]) !== -1;
+                        newOption.selected = isValueNumeric ? this.value.findIndex(m => m[this.itemValue] === parseFloat(newOption[this.itemValue])) !== -1 : this.value.findIndex(m => m[this.itemValue] === newOption[this.itemValue]) !== -1;
                         this.selectableItems.push(newOption);
                     }
                 }
