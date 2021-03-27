@@ -24,7 +24,7 @@ import * as Polymer from "@polymer/polymer/lib/legacy/polymer.dom";
 class JvxMultiselect extends LitElement {
     render() {
         return html`
-            <div style="position:relative; display: inline;" class=${classMap({
+            <div style="position:relative; display: inline; " class=${classMap({
                 'jvx-multiselect': true,
                 'jvx-multiselect-multi': this.multi,
                 'jvx-multiselect-flat-round': this.flatRound,
@@ -34,6 +34,52 @@ class JvxMultiselect extends LitElement {
                 'jvx-multiselect-has-state': this.isOpen || this.hasErrors === true || this.disabled,
                 'jvx-multiselect-disabled': this.disabled
             })}>
+
+                <!-- region menu -->
+                <mwc-menu fullwidth id="optionsMenu" @closed="${this._onMenuToggled}" @opened="${this._onMenuToggled}">
+
+                    <!-- region search input -->
+                    <div class="optionsMenu__search-input-container">
+                        ${this.searchInput ? html`
+                            <jvx-material-input
+                                    .flatRound="${this.flatRound}"
+                                    placeholder="${this.searchLabel}"
+                                    type="text"
+                                    @input="${this._onSearch}"
+                                    background-color="transparent"
+                                    class="ma-0 pa-0 jvx-multiselect-search-field"
+                                    flat
+                                    @click:append="$emit('showAdvancedSearch')"
+                                    value="${this.searchValue}">
+                                ${this.advancedSearch ? html`
+                                    <div slot="append">
+                                        <mwc-icon-button id="advanced-search-button" icon="more_vert"
+                                                         @click="${this._showAdvancedSearch}">
+                                        </mwc-icon-button>
+                                    </div>` : html``}
+                            </jvx-material-input>` : html``}
+
+                    </div>
+                    <!-- endregion -->
+                    <!--       region list-->
+                    <div class="jvx-multiselect__list-container">
+                        <mwc-list multi="${this.multi}">
+                            ${repeat(this.selectableItems, item => item[this.itemValue], (item, index) => html`
+                                <mwc-list-item class="list-option" .selected="${item.selected}"
+                                               .activated="${item.selected}" value="${item[this.itemValue]}"
+                                               @click="${(e) => {
+                                this.select(item)
+                            }}">
+                                    <div class="list-option-content" data-value="${item[this.itemValue]}">
+                                        ${item[this.itemText]}
+                                    </div>
+
+                                </mwc-list-item>`)}
+                        </mwc-list>
+                    </div>
+                    <!--      endregion -->
+                </mwc-menu>
+                <!-- endregion -->
                 <!-- region input container -->
                 <div id="multiInputField" class=${classMap({
                     'input-container': true,
@@ -92,52 +138,7 @@ class JvxMultiselect extends LitElement {
                     </div>
                 </div>
                 <!-- endregion -->
-                <!-- region menu -->
-                <mwc-menu fullwidth id="optionsMenu" @closed="${this._onMenuToggled}" @opened="${this._onMenuToggled}"
-                          corner="TOP_LEFT" absolute>
-
-                    <!-- region search input -->
-                    <div class="optionsMenu__search-input-container">
-                        ${this.searchInput ? html`
-                            <jvx-material-input
-                                    .flatRound="${this.flatRound}"
-                                    placeholder="${this.searchLabel}"
-                                    type="text"
-                                    @input="${this._onSearch}"
-                                    background-color="transparent"
-                                    class="ma-0 pa-0 jvx-multiselect-search-field"
-                                    flat
-                                    @click:append="$emit('showAdvancedSearch')"
-                                    value="${this.searchValue}">
-                                ${this.advancedSearch ? html`
-                                    <div slot="append">
-                                        <mwc-icon-button id="advanced-search-button" icon="more_vert"
-                                                         @click="${this._showAdvancedSearch}">
-                                        </mwc-icon-button>
-                                    </div>` : html``}
-                            </jvx-material-input>` : html``}
-
-                    </div>
-                    <!-- endregion -->
-                    <!--       region list-->
-                    <div class="jvx-multiselect__list-container">
-                        <mwc-list multi="${this.multi}">
-                            ${repeat(this.selectableItems, item => item[this.itemValue], (item, index) => html`
-                                <mwc-list-item class="list-option" .selected="${item.selected}"
-                                               .activated="${item.selected}" value="${item[this.itemValue]}"
-                                               @click="${(e) => {
-                                                   this.select(item)
-                                               }}">
-                                    <div class="list-option-content" data-value="${item[this.itemValue]}">
-                                        ${item[this.itemText]}
-                                    </div>
-
-                                </mwc-list-item>`)}
-                        </mwc-list>
-                    </div>
-                    <!--      endregion -->
-                </mwc-menu>
-                <!-- endregion -->
+                
             </div>
             </div>
 
@@ -289,9 +290,7 @@ class JvxMultiselect extends LitElement {
             this._updateSelectionSlot();
             const menu = Polymer.dom(this.shadowRoot).querySelector('mwc-menu');
             const jvxMultiselect = Polymer.dom(this.shadowRoot).querySelector('#multiInputField');
-            menu.x = -jvxMultiselect.getBoundingClientRect().left;
-            menu.y = -jvxMultiselect.getBoundingClientRect().bottom;
-            menu.show();
+            menu.anchor = jvxMultiselect;
         }, 0)
     }
 
