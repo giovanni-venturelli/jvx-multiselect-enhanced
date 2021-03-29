@@ -2,7 +2,7 @@
   "name": "jvx-multiselect",
   "description": "a multiselect",
   "main": "jvx-multiselect.js",
-  "version": "2.0.39",
+  "version": "2.0.40",
   "scripts": {
     "serve": "polymer serve --open"
   },
@@ -20,8 +20,7 @@
     "jvx-material-input": "^1.0.6",
     "lit-element": "^2.4.0",
     "paper-chip": "^3.0.0",
-    "polymer-cli": "^1.9.11",
-    "throttle-debounce": "^3.0.1"
+    "polymer-cli": "^1.9.11"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.1.0",
