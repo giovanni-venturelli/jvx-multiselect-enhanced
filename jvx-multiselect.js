@@ -12,6 +12,7 @@ import {css, html, LitElement} from 'lit-element';
 import {classMap} from 'lit-html/directives/class-map';
 import {repeat} from 'lit-html/directives/repeat';
 import 'paper-chip';
+import {debounce} from 'throttle-debounce';
 
 /**
  * `jvx-multiselect`
@@ -287,7 +288,9 @@ class JvxMultiselect extends LitElement {
     style.textContent = `.mdc-list-item__text {color: red;}`;
     this.shadowRoot.appendChild(style);
 
-
+    const debounceFunc = debounce(200, false, () => {
+      this.setMenuPosition();
+    });
     window.addEventListener('resize', (e) => {
       this.setMenuPosition();
     });
