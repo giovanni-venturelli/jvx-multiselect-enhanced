@@ -6,6 +6,7 @@ import '@material/mwc-list/mwc-list-item.js';
 import '@material/mwc-list/mwc-list.js';
 import '@material/mwc-menu';
 import '@material/mwc-textfield';
+import './jvx-surface';
 import 'jvx-material-input';
 import {css, html, LitElement} from 'lit-element';
 import {classMap} from 'lit-html/directives/class-map';
@@ -36,8 +37,7 @@ class JvxMultiselect extends LitElement {
         })}>
 
             <!-- region menu -->
-            <mwc-menu fullwidth id="optionsMenu" @closed="${this._onMenuToggled}" @opened="${this._onMenuToggled}"
-                      absolute>
+            <jvx-menu fullwidth id="optionsMenu" @closed="${this._onMenuToggled}" @opened="${this._onMenuToggled}">
 
                 <!-- region search input -->
                 <div class="optionsMenu__search-input-container">
@@ -79,7 +79,7 @@ class JvxMultiselect extends LitElement {
                     </mwc-list>
                 </div>
                 <!--      endregion -->
-            </mwc-menu>
+            </jvx-menu>
             <!-- endregion -->
             <!-- region input container -->
             <div id="multiInputField" class=${classMap({
@@ -289,20 +289,20 @@ class JvxMultiselect extends LitElement {
     style.textContent = `.mdc-list-item__text {color: red;}`;
     this.shadowRoot.appendChild(style);
 
-    const debounceFunc = debounce(200, false, () => {
-      this.setMenuPosition();
-    });
-    window.addEventListener('resize', (e) => {
-      debounceFunc();
-    });
+    // const debounceFunc = debounce(200, false, () => {
+    //   this.setMenuPosition();
+    // });
+    // window.addEventListener('resize', (e) => {
+    //   debounceFunc();
+    // });
     setTimeout(() => {
       this._updateSelectionSlot();
       // const menu = Polymer.dom(this.shadowRoot).querySelector('mwc-menu');
       // const jvxMultiselect = Polymer.dom(this.shadowRoot).querySelector('#multiInputField');
       this.optionsMenu.anchor = this.jvxMultiselectElement;
-      this.optionsMenu.x = -this.jvxMultiselectElement.getBoundingClientRect().left;
+      // this.optionsMenu.x = -this.jvxMultiselectElement.getBoundingClientRect().left;
       console.log(this.shadowRoot.querySelector('.jvx-multiselect__list-container').getBoundingClientRect().height);
-      this.setMenuPosition();
+      // this.setMenuPosition();
       // this.optionsMenu.y = -this.jvxMultiselectElement.getBoundingClientRect().top;
     }, 0)
   }
@@ -420,15 +420,17 @@ class JvxMultiselect extends LitElement {
   }
 
   _onMenuToggled() {
-    if (this.firstOpen) {
-      setTimeout(() => {
-        const menuHeight = this.shadowRoot.querySelector('.jvx-multiselect__list-container').getBoundingClientRect().height > 10 ? this.shadowRoot.querySelector('.jvx-multiselect__list-container').getBoundingClientRect().height : 300;
-        this.optionsMenu.y = -(this.jvxMultiselectElement.getBoundingClientRect().top+ window.scrollY + menuHeight);
-        this.optionsMenu.open = false;
-        this.optionsMenu.quick = false;
-        this.firstOpen = false;
-      }, 0)
-    }
+    // if (this.firstOpen) {
+    //   setTimeout(() => {
+    //     this.shadowRoot.querySelector('.jvx-multiselect__list-container').style.opacity = 0;
+    //     const menuHeight = this.shadowRoot.querySelector('.jvx-multiselect__list-container').getBoundingClientRect().height > 10 ? this.shadowRoot.querySelector('.jvx-multiselect__list-container').getBoundingClientRect().height : 300;
+    //     this.optionsMenu.y = -(this.jvxMultiselectElement.getBoundingClientRect().top+ window.scrollY + menuHeight);
+    //     this.optionsMenu.open = false;
+    //     this.optionsMenu.quick = false;
+    //     this.shadowRoot.querySelector('.jvx-multiselect__list-container').style.opacity = 1;
+    //     this.firstOpen = false;
+    //   }, 0)
+    // }
     this.isOpen = this.optionsMenu.open;
     this.isFocused = this.optionsMenu.open;
     let event = new CustomEvent('jvx-menu-closed');
