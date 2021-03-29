@@ -64,8 +64,11 @@ class JvxSurface extends MenuSurface {
         /* my stylings */
 
         .mdc-menu-surface.jvx-menu-surface__above {
-          margin-top: calc(-100% + 365px);
+          //margin-top: calc(-100% + 365px);
           max-height: var(--mdc-menu-max-height, 300px) !important;
+          transform-origin: center bottom !important;
+          bottom: 0;
+          top: auto !important;
         }
       `
     ];
@@ -106,9 +109,7 @@ class JvxSurface extends MenuSurface {
                 @keydown=${this.onKeydown}
                 @opened=${this.registerBodyClick}
                 @closed=${this.deregisterBodyClick}>
-            <div class="jvx-menu-surface__content">
                 <slot></slot>
-            </div>
         </div>`;
   }
 }
