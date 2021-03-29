@@ -240,7 +240,6 @@ class JvxMultiselect extends LitElement {
 
   constructor() {
     super();
-    this.firstOpen = true;
     this.selectableItems = [];
     this.selected = [];
     this.multi = false;
@@ -289,33 +288,27 @@ class JvxMultiselect extends LitElement {
     style.textContent = `.mdc-list-item__text {color: red;}`;
     this.shadowRoot.appendChild(style);
 
-    // const debounceFunc = debounce(200, false, () => {
-    //   this.setMenuPosition();
-    // });
-    // window.addEventListener('resize', (e) => {
-    //   debounceFunc();
-    // });
+    const debounceFunc = debounce(200, false, () => {
+      this.setMenuPosition();
+    });
+    window.addEventListener('resize', (e) => {
+      debounceFunc();
+    });
     setTimeout(() => {
       this._updateSelectionSlot();
-      // const menu = Polymer.dom(this.shadowRoot).querySelector('mwc-menu');
-      // const jvxMultiselect = Polymer.dom(this.shadowRoot).querySelector('#multiInputField');
+
       this.optionsMenu.anchor = this.jvxMultiselectElement;
-      // this.optionsMenu.x = -this.jvxMultiselectElement.getBoundingClientRect().left;
-      console.log(this.shadowRoot.querySelector('.jvx-multiselect__list-container').getBoundingClientRect().height);
-      // this.setMenuPosition();
-      // this.optionsMenu.y = -this.jvxMultiselectElement.getBoundingClientRect().top;
+
+      this.setMenuPosition();
+
     }, 0)
   }
 
   setMenuPosition() {
-    this.firstOpen = true;
-    this.optionsMenu.y = -this.jvxMultiselectElement.getBoundingClientRect().top;
     if (window.innerHeight - this.jvxMultiselectElement.getBoundingClientRect().top < 350) {
-      this.optionsMenu.quick = true;
-
-      this.optionsMenu.open = true;
+      this.optionsMenu.position= 'above';
     } else {
-      this.firstOpen = false;
+      this.optionsMenu.position= 'below';
     }
   }
 
@@ -412,6 +405,7 @@ class JvxMultiselect extends LitElement {
         this.selectableItems = [];
         this._getList();
       } else {
+
         this.optionsMenu.open = !this.optionsMenu.open;
       }
     } else {
@@ -420,17 +414,7 @@ class JvxMultiselect extends LitElement {
   }
 
   _onMenuToggled() {
-    // if (this.firstOpen) {
-    //   setTimeout(() => {
-    //     this.shadowRoot.querySelector('.jvx-multiselect__list-container').style.opacity = 0;
-    //     const menuHeight = this.shadowRoot.querySelector('.jvx-multiselect__list-container').getBoundingClientRect().height > 10 ? this.shadowRoot.querySelector('.jvx-multiselect__list-container').getBoundingClientRect().height : 300;
-    //     this.optionsMenu.y = -(this.jvxMultiselectElement.getBoundingClientRect().top+ window.scrollY + menuHeight);
-    //     this.optionsMenu.open = false;
-    //     this.optionsMenu.quick = false;
-    //     this.shadowRoot.querySelector('.jvx-multiselect__list-container').style.opacity = 1;
-    //     this.firstOpen = false;
-    //   }, 0)
-    // }
+
     this.isOpen = this.optionsMenu.open;
     this.isFocused = this.optionsMenu.open;
     let event = new CustomEvent('jvx-menu-closed');
