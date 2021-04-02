@@ -291,9 +291,9 @@ class JvxMultiselect extends LitElement {
     const debounceFunc = debounce(200, false, () => {
       this.setMenuPosition();
     });
-    // window.addEventListener('resize', (e) => {
-    //   this.setMenuPosition();
-    // });
+    window.addEventListener('resize', (e) => {
+      this.setMenuPosition();
+    });
     setTimeout(() => {
       this._updateSelectionSlot();
 
@@ -314,7 +314,7 @@ class JvxMultiselect extends LitElement {
 
   updated(changedProperties) {
     super.updated(changedProperties);
-    this._updateOptionSlot(changedProperties);
+    // this._updateOptionSlot(changedProperties);
   }
 
   connectedCallback() {
@@ -419,7 +419,6 @@ class JvxMultiselect extends LitElement {
 
   _onMenuToggled() {
     console.log('toggled jvx-menu');
-
     this.isOpen = this.optionsMenu.open;
     this.isFocused = this.optionsMenu.open;
     let event = new CustomEvent('jvx-menu-closed');
@@ -508,6 +507,7 @@ class JvxMultiselect extends LitElement {
   _updateOptionSlot(e) {
     let slot = this.shadowRoot.querySelector('slot[name="option-item"]');
     if (!!slot && slot.assignedNodes().length > 0) {
+      console.log('replace options template');
 
       for (const item of this.selectableItems) {
         const optionTemplate = slot.assignedNodes()[0];
@@ -517,7 +517,6 @@ class JvxMultiselect extends LitElement {
           if (option.dataset.value === item[this.itemValue].toString()) {
             option.innerHTML = '';
             option.appendChild(optionTemplate.cloneNode(true).childNodes[0]);
-            console.log('replace options');
             this._replaceOptionProperties(option.childNodes, item)
           }
         }
@@ -547,7 +546,7 @@ class JvxMultiselect extends LitElement {
     let slot = this.shadowRoot.querySelector('slot[name="options"]');
     if (!!slot && slot.assignedNodes().length > 0) {
       const nodes = slot.assignedNodes();
-
+      console.log('replace options');
       for (let n of nodes) {
         for (let child of n.children) {
           let isValueNumeric = false;
@@ -597,6 +596,7 @@ class JvxMultiselect extends LitElement {
           }
         }
       }
+      console.log('end replace options');
       // for (const item of this.selectableItems) {
       //   const optionTemplate = slot.assignedNodes()[0];
       //   const nodes = this.shadowRoot.querySelectorAll('.list-option-content');
