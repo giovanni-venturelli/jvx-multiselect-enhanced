@@ -65,7 +65,7 @@ class JvxSurface extends MenuSurface {
 
         .mdc-menu-surface.jvx-menu-surface__above {
           //margin-top: calc(-100% + 365px);
-          max-height: var(--mdc-menu-max-height, 300px) !important;
+          max-height: var(--mdc-menu-max-height, 308px) !important;
           transform-origin: center bottom !important;
           bottom: 0;
           top: auto !important;
