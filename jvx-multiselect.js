@@ -291,9 +291,9 @@ class JvxMultiselect extends LitElement {
     const debounceFunc = debounce(200, false, () => {
       this.setMenuPosition();
     });
-    window.addEventListener('resize', (e) => {
-      this.setMenuPosition();
-    });
+    // window.addEventListener('resize', (e) => {
+    //   this.setMenuPosition();
+    // });
     setTimeout(() => {
       this._updateSelectionSlot();
 
@@ -401,15 +401,18 @@ class JvxMultiselect extends LitElement {
   _toggleMenu() {
     console.log('toggle jvx-menu');
     if (!this.optionsMenu.open) {
+      console.log('menu to be opened');
       if ((!this.options || this.options.length === 0) && this.url && this.url.length > 0) {
         this.pagination.page = 1;
         this.selectableItems = [];
         this._getList();
       } else {
 
+        console.log('no url');
         this.optionsMenu.open = !this.optionsMenu.open;
       }
     } else {
+      console.log('menu to be closed');
       this.optionsMenu.open = !this.optionsMenu.open;
     }
   }

@@ -2,7 +2,7 @@
   "name": "jvx-multiselect",
   "description": "a multiselect",
   "main": "jvx-multiselect.js",
-  "version": "2.0.42",
+  "version": "2.0.43",
   "scripts": {
     "serve": "polymer serve --open"
   },
